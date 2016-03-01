@@ -21,7 +21,7 @@ Modifications:
 
 
 ;Print out the stats pertaining to the algorithm used
-( defun stat_printer ()
+( defun print_stats ()
     ;eventually add stats to the parameter
     ;(format t "~S graph search~%" algorithm ) 
     (format t "~%<Whatever> graph search~%"  ) 
@@ -34,7 +34,7 @@ Modifications:
 
 
 ;Print out all of the puzzle transitions that led to the solution
-( defun puzzle_printer ( all_puzzles col_size )
+( defun print_puzzles ( all_puzzles col_size )
     
     ;Given a list of puzzle states, print them all out
     (let ( (per_column col_size ) (col 0) (x 0 ) (y 0) (count (length all_puzzles) ) )
@@ -43,7 +43,7 @@ Modifications:
         ;will later have to modify this to handle
         ;inputting the actual stats, currently does
         ;nothing!
-        ( stat_printer )
+        ( print_stats )
 
         ;col monitors the column total, so there are
         ;<col> states per row.
@@ -166,7 +166,7 @@ Modifications:
             (setf puzzles (list p1 p2 p3 p4 p5 p6))
 
             ;(print puzzles)
-            ( puzzle_printer puzzles 4)
+            ( print_puzzles puzzles 4)
         )
     )
 )
