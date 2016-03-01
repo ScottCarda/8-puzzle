@@ -21,6 +21,7 @@
             ( setf i ( 1+ i ) )
         )
     )
+    ( values )
 )
 
 ( defun read-puzzle-file ( filename )
