@@ -26,9 +26,9 @@ Modifications:
     ;(format t "~S graph search~%" algorithm ) 
     (format t "~%<Whatever> graph search~%"  ) 
     (format t "----------------------------------------------~%")
-    ;(format t "Solution found in ~D moves~%" moves ) 
+    ;(format t "Solution found in ~S moves~%" moves ) 
     (format t "Solution found in X moves~%" ) 
-    ;(format t "~D nodes generated (~D distinct nodes), ~D nodes expanded~%" n_gen n_distinct n_expanded)
+    ;(format t "~S nodes generated (~S distinct nodes), ~S nodes expanded~%" n_gen n_distinct n_expanded)
     (format t "31 nodes generated (22 distinct nodes), 10 nodes expanded~%")
 )
 
@@ -114,7 +114,13 @@ Modifications:
     (let ((a (nth 0 puzzle))
           (b (nth 1 puzzle))
           (c (nth 2 puzzle)))
-         (format t "~D ~D ~D      " a b c ) 
+
+        ;format puzzle
+        (setq a (format_char a))
+        (setq b (format_char b))
+        (setq c (format_char c))
+
+         (format t "~A ~A ~A      " a b c ) 
     )
 )
 
@@ -123,11 +129,17 @@ Modifications:
     (let ((a (nth 3 puzzle))
           (b (nth 4 puzzle))
           (c (nth 5 puzzle)))
+
+        ;format puzzle
+        (setq a (format_char a))
+        (setq b (format_char b))
+        (setq c (format_char c))
+
         (cond
             ;If this is the last state, don't draw an error
-            ( (null last) (format t "~D ~D ~D      " a b c )  )
+            ( (null last) (format t "~A ~A ~A      " a b c )  )
             ;Otherwise, do draw another arrow
-            ( T           (format t "~D ~D ~D  ->  " a b c )  ) 
+            ( T           (format t "~A ~A ~A  ->  " a b c )  ) 
         )
     )
 )
@@ -137,18 +149,25 @@ Modifications:
     (let ((a (nth 6 puzzle))
           (b (nth 7 puzzle))
           (c (nth 8 puzzle)))
-         (format t "~D ~D ~D      " a b c ) 
+
+        ;format puzzle
+        (setq a (format_char a))
+        (setq b (format_char b))
+        (setq c (format_char c))
+
+         (format t "~A ~A ~A      " a b c ) 
     )
 )
 
 
 ;Print out a character in the puzzle map with proper formatting
-( defun print_char (val)
+( defun format_char (val)
+    ;Zeroes show up as blanks in the puzzle display.
     (cond
         ( (= val 0) 
-            (format t "~D" '" " ) 
-        )
-        (t (format t "~D" val ) )
+            (setq x " "))
+        (t 
+            (setq x val))
     )
 )
 
@@ -165,6 +184,7 @@ Modifications:
             (setf p6 (list 0 0 0 1 2 3 0 0 0))
             (setf puzzles (list p1 p2 p3 p4 p5 p6))
 
+            ;(print (format_char 5))
             ;(print puzzles)
             ( print_puzzles puzzles 4)
         )
