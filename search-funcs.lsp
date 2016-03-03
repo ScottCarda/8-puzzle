@@ -6,7 +6,7 @@
           )
         
         ; Perform UP move and add it to successors
-        ( when ( > location 3 )
+        ( when ( >= location 3 )
             ( setf UP ( copy-list state ) )
             ( rotatef ( nth location UP ) ( nth ( - location 3 ) UP ) )
             ( setf succ ( cons UP succ ) )
