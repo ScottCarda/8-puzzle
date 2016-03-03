@@ -1,12 +1,12 @@
 ( defun 8puzzle ( puzzlelist )
-    ( cond
-        ( ( = ( length puzzlelist ) 0 )
-            ( format t "No List! - puzzle" )
-        )
+	( cond
+		( ( = ( length puzzlelist ) 0 )
+			( format t "No List! - puzzle" )
+	)
     		
-        ( t
-            ( printState puzzlelist )
-        )
+		( t
+			( printState puzzlelist )
+		)
 	)
 	
 	; Suppress NIL
@@ -38,4 +38,17 @@
 )
 
 ( main )
+
+( defun goalCheck ( state goal )
+	( cond
+		( ( equal puzzlelist ( 1 2 3 8 0 4 7 6 5 ) )
+			( format t "Solution Reached" )
+	)
+			( t
+				( printState puzzlelist )
+			)
+		)
+	; Suppress NIL
+	( values )
+)
 
