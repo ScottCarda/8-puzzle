@@ -1,4 +1,4 @@
-( defun 8puzzle ( puzzlelist )
+( defun 8puzzle ( &optional puzzlelist )
     ( cond
         ( ( = ( length puzzlelist ) 0 )
             ( format t "No List! - puzzle" )
