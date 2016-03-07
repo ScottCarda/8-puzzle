@@ -1,16 +1,35 @@
 ( defun 8puzzle ( &optional puzzlelist )
     ( cond
+        
         ( ( = ( length puzzlelist ) 0 )
-            ( format t "No List! - puzzle" )
+        
+            ( format t "Please enter a puzzle:" )
+            ; Replace this with the search algorithm to be run
+            ( printState ( read-puzzle ) )
+            
+        )
+        
+        ( ( < ( length puzzlelist ) 9 )
+        
+            ( format t "Error: Incorrect puzzle size!" )
         )
     		
         ( t
+            ; Replace this with the search algorithm to be run
             ( printState puzzlelist )
         )
     )
 	
 	; Suppress NIL
 	( values )
+)
+
+( defun read-puzzle ()
+    ( let ( ( str ( read-line ) ) )
+        ( with-input-from-string ( stream str )
+            ( get-puzzle stream )
+        )   
+    )
 )
 
 ( defun printState ( state )
