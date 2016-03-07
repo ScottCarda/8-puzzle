@@ -34,3 +34,20 @@
         )
     )
 )
+
+
+;Determine if you have reached a goal state, perhaps a bit of overkill
+( defun goal? (
+    curr_state 
+    &optional (goal_state '(1 2 3 8 0 4 7 6 5)) 
+              (puzzle_size 9))
+
+    ;Check each spot in the list with the goal
+    (setf check_list (mapcar #'eq curr_state goal_state))
+
+    ;found_goal will be NIL if everything matches
+    (setf found_goal (position NIL check_list))
+
+    ;goal? returns T if goal reached, NIL otherwise
+    (null found_goal)
+)
