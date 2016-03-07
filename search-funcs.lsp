@@ -41,7 +41,6 @@
     curr_state 
     &optional (goal_state '(1 2 3 8 0 4 7 6 5)) 
               (puzzle_size 9))
-
     ( let ( check_list found_goal )
         ;Check each spot in the list with the goal
         (setf check_list (mapcar #'eq curr_state goal_state))
