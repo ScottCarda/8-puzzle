@@ -10,57 +10,67 @@ Modifications:
 
 |#
 
+
+#|--------------------------------------------------------------------------|#
+#|                               Files Loaded                               |#
+#|--------------------------------------------------------------------------|#
+
+; File that specifies the goal? function and
+; the successors function required by the algorithm.
 ( load 'search-funcs )
 
-;Set up similar to Scott's structure for A* file
-( defun bfs ( state ) 
-    ( cdr ( bfs_search ( list ( make_node 0 state NIL ) ) NIL ) )
-)
+
+#|--------------------------------------------------------------------------|#
+#|                                Structs                                   |#
+#|--------------------------------------------------------------------------|# 
 
 ; Initialize a Node Structure
 (defstruct node state parent)
 
-
-(defun bfs_search ( state )
+#|--------------------------------------------------------------------------|#
+#|                              BFS Functions                               |#
+#|--------------------------------------------------------------------------|#
+( defun bfs ( puz_state )
     (do*
-
         (
-            (current state)
-            ( open_list (list state) )
+            (current ( make-node :state puz_state :parent nil))
+            ( open_list (list current) )
             (closed_list nil)
             ( succ_lst nil )
             ( return_list nil )
+            ( new_node nil )
         )
 
-        ( ( goal? ( car open_list ) ) (print (car open_list ))
+        ( ( goal? ( node-state ( car open_list )) ) (setf goal_node (  car open_list ) )
             ;if this is true, then we've reached the solution
             ;reformat the answer.
             ;;( reformat_node best )
 
         )
-        
+
+        ;when the open_list is empty you're done!        
         ( when (null open_list ) (return nil))
-            ; get current node from OPEN, update OPEN and CLOSED
-            (setf current (car open_list))
-            (setf open_list (cdr open_list))
-            (setf closed_list (cons current closed_list))
 
 
-            ; add successors of current node to OPEN
-            ( setf succ_lst (successors current) )
-                ; for each child node
-            ( loop for s in succ_lst do 
-                (print s)
+        ; get current node from OPEN, update OPEN and CLOSED
+        (setf current (car open_list))
+        (setf open_list (cdr open_list))
+        (setf closed_list (cons current closed_list))
 
-                ; if the node is not on OPEN or CLOSED
-                ; add to the end of the list
-                (if (and
-                      (not (member s open_list  ))
-                      (not (member s closed_list))
-                    )
-                    (setf open_list (append open_list (list s)))
+
+        ; add successors of current node to OPEN
+        ( setf succ_lst (successors (node-state current) ) )
+            ; for each child node
+        ( loop for s in succ_lst do 
+
+            ; if the node is not on OPEN or CLOSED
+            ; add to the end of the list
+            (if (and
+                  (not (member s open_list  ))
+                  (not (member s closed_list))
                 )
+                (setf open_list (append open_list (list (make-node :state s :parent current))))
             )
-
+        )
     )
 )
