@@ -66,7 +66,7 @@ Modifications:
 
 
         ; add successors of current node to OPEN
-        ( setf successor_lst (successors (node-state current) ) )
+        ( setf successor_lst ( n-successors (node-state current) ) )
 
         ; for each successor node
         ( loop for s in successor_lst do 
