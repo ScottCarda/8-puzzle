@@ -5,7 +5,7 @@
 				( list currentState )
 			)
 			( ( >= ( + currentDepth 1 ) maxDepth )
-`				nil
+				nil
 			)
 			( t
 				( dolist ( succ ( successors currentState ) )
@@ -13,7 +13,7 @@
 						( setf goalFound ( deepSearch succ maxDepth ( 1+ currentDepth ) ) )
 					)
 				)
-				( if ( goalFound )
+				( if goalFound
 					( cons currentState goalFound )
 					nil
 				)
@@ -22,10 +22,12 @@
 	)
 )
 
-( defun DFID ( startState )
-	( let ( ( searchDepth 0 ) )
-		( while ( not ( deepSearch startState searchDepth 0 )
-			( 1+ searchDepth )
+( defun dfid ( startState )
+	( let ( ( searchDepth 0 ) pathReturn )
+		( loop while ( not pathReturn ) do
+			( setf pathReturn ( deepSearch startState searchDepth 0 ) )
+			( incf searchDepth )
 		) 
+		pathReturn
 	)
 )
