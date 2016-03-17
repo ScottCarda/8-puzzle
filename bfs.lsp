@@ -40,6 +40,8 @@ Modifications:
             ( return_list   nil )
             ( new_node      nil )
             ( g_state ( generate_goal ( - ( length puz_state ) 1) ) )
+
+            ( node_count 0 )
         )
 
         ;DO* exit condition:
@@ -52,7 +54,10 @@ Modifications:
 
             ;reformat the answer.
             ( setf state_list ( reformat goal_node ) )
+
+
             ( return state_list )
+
         )
 
         ;when the open_list is empty don't do anything!!        
@@ -68,8 +73,10 @@ Modifications:
 
 
         ; add successors of current node to OPEN
-        ( setf successor_lst ( n-successors (node-state current) ) )
+        ( setf successor_lst ( successors (node-state current) ) )
 
+        ;( setf node_count ( + ( length successor_lst ) node_count ) )
+        ;( format t "Successors Generated: ~D~%" node_count )
         ; for each successor node
         ( loop for s in successor_lst do 
 
