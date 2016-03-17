@@ -1,43 +1,22 @@
-( defun successors ( state )
-    ( let (
-            ( location ( position 0 state ) )
-            ( succ '() )
-            UP DOWN LEFT RIGHT
-          )
-        
-        ; Perform UP move and add it to successors
-        ( when ( > location 2 )
-            ( setf UP ( copy-list state ) )
-            ( rotatef ( nth location UP ) ( nth ( - location 3 ) UP ) )
-            ( setf succ ( cons UP succ ) )
-        )
-        
-        ; Perform DOWN move and add it to successors
-        ( when ( < location 6 )
-            ( setf DOWN ( copy-list state ) )
-            ( rotatef ( nth location DOWN ) ( nth ( + location 3 ) DOWN ) )
-            ( setf succ ( cons DOWN succ ) )
-        )
-        
-        ; Perform LEFT move and add it to successors
-        ( when ( > ( mod location 3 ) 0 )
-            ( setf LEFT ( copy-list state ) )
-            ( rotatef ( nth location LEFT ) ( nth ( - location 1 ) LEFT ) )
-            ( setf succ ( cons LEFT succ ) )
-        )
-        
-        ; Perform RIGHT move and add it to successors
-        ( when ( < ( mod location 3 ) 2 )
-            ( setf RIGHT ( copy-list state ) )
-            ( rotatef ( nth location RIGHT ) ( nth ( + location 1 ) RIGHT ) )
-            ( setf succ ( cons RIGHT succ ) )
-        )
-	succ
-    )
-)
+#|
+                    ***** SEARCH-FUNCS.LSP *****
 
+Routines for generating successor states and determining 
+Goal states have been reached.
+
+Authors: J. Anthony Brackins, Scott Carda, Leif Torgersen
+Written Spring 2016 for CSC447/547 AI class.
+
+Modifications:
+
+|#
+
+
+#|--------------------------------------------------------------------------|#
+#|                           SUCCESSORS FUNCTION                            |#
+#|--------------------------------------------------------------------------|#
 ;new successor function designed to generalize to the n-puzzle
-( defun n-successors 
+( defun successors 
     ( 
       state 
       &optional ( n_value 8 )        
@@ -98,6 +77,9 @@
 
 
 
+#|--------------------------------------------------------------------------|#
+#|                          Determine Goal State                            |#
+#|--------------------------------------------------------------------------|#
 ;Determine if you have reached a goal state, perhaps a bit of overkill
 ( defun goal? (
     curr_state 
