@@ -34,7 +34,7 @@ Modifications:
         ;( format t "dimension: ~d height: ~d width: ~d~%" dimension height width)
         ( loop do 
 
-            ( format t "dimension: ~d height: ~d width: ~d~%" dimension height width)
+            ;( format t "dimension: ~d height: ~d width: ~d~%" dimension height width)
 
             ;Move cursor over 1.
             ;Seems weird, but we need to start each

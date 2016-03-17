@@ -18,6 +18,7 @@ Modifications:
 ; File that specifies the goal? function and
 ; the successors function required by the algorithm.
 ( load 'search-funcs )
+( load 'mapper )
 
 #|--------------------------------------------------------------------------|#
 #|                                Structs                                   |#
@@ -38,12 +39,13 @@ Modifications:
             ( successor_lst nil )
             ( return_list   nil )
             ( new_node      nil )
+            ( g_state ( generate_goal ( - ( length puz_state ) 1) ) )
         )
 
         ;DO* exit condition:
         ;Check the state of the node at the front of the open list.
         ;If this value is 
-        ( ( goal? ( node-state ( car open_list ) ) ) 
+        ( ( goal? ( node-state ( car open_list ) ) g_state ) 
 
             ;This is our answer
             ( setf goal_node (  car open_list ) )
