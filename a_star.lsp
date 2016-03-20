@@ -6,9 +6,7 @@ state-space search algorithm. The primary function in this file is the A*
 function, which, when called, initiates the algorithm and returns a list of
 states beginning with the state given, taken as the starting state, and ending
 with the goal state. The A* algorithm works by implementing a heuristic to
-estimate a state's distance to the goal state. Because the heuristic function
-will usually differ from problem to problem, it has been given its own section
-on this file to make it easy to find and change.
+estimate a state's distance to the goal state.
 
 The A* algorithm uses two lists called the Open List and the Closed List. The
 Open List is used to store found states whose successors have yet to be
@@ -38,14 +36,6 @@ each state. The structure of a node is as follows:
         state - the state that the node holds in the state-space
         parent-state - the state that the node's parent holds
 
-These functions require that two functions be specified. The first function
-required is of the form ( goal? state ) which takes a state and returns T if
-the state given is the goal state or NIL otherwise. The second function
-required is of the form ( successors state ) which takes a state and returns
-a list of successor states. This function will dictate how the algorithm will
-traverse the state-space. These functions may be specified in a file that is
-loaded in under the Files Loaded section.
-
 Author: Scott Carda
 Written Spring 2016 for CSC447/547 AI class.
 
@@ -57,38 +47,33 @@ Written Spring 2016 for CSC447/547 AI class.
 
 ; File that specifies the goal? function and
 ; the successors function required by the algorithm.
-( load 'search-funcs )
+;( load 'search-funcs )
 
 #|--------------------------------------------------------------------------|#
 #|                               A* Functions                               |#
 #|--------------------------------------------------------------------------|#
 
-; Performs the A* algorithm given a starting state.
-( defun A* ( state )
+; Performs the A* algorithm given a starting state, goal predicate function,
+; successor generation function, and a static evaluation heuristic function.
+( defun A* ( state goal? successors heuristic )
     ; Stripes off the leading NIL from the returned list of states
     ( cdr
         ; Calls the recursive A*_search function
         ( A*_search
             ; Open List only has the starting node in it
-;            ( list ( make_node 0 state NIL ) )
-            ( list ( list 0 ( heuristic state ) state NIL ) )
+            ( list ( list 0 ( funcall #'C state ) state NIL ) )
             ; Closed List is empty
             NIL
+            goal?
+            successors
+            heuristic
         )
     )
 )
 
 ; Recursively searches the state-space by picking the 'best' unexpanded
 ; node so far and expanding it, until the goal state is found.
-( defun A*_search ( open_list closed_list )
-;    ( format t "A*_search called with parameters:~%" )
-;    ( format t "    open_list: ~A~%" open_list )
-;    ( format t "    closed_list: ~A~%" closed_list )
-;    ( format t "Continue?(Y|N): " )
-;    ( let ( c )
-;        ( setf c ( read ) )
-;        ( unless ( eq c 'N )
-
+( defun A*_search ( open_list closed_list goal? successors heuristic )
     ( let
         (
             ; Gets the best node in the Open List
@@ -96,25 +81,17 @@ Written Spring 2016 for CSC447/547 AI class.
             ; Holds '((open_list) (closed_list)) which
             ; is returned by some functions
             both
-;            succ_g    ; The g value of the successor nodes
             succ_lst    ; List of successor nodes
             return_list    ; List that is returned by this function
         )
 
-        ; Successor's g values are one greater than their parent's
-;        ( setf succ_g ( 1+ ( car best ) ) )
-
-
         ( cond
 
             ; If best is the goal state ( base case ):
-            ( ( goal? ( caddr best ) )
-;                ( format t "Base Case Return: ~A -> ~A~%" best ( reformat_node best ) )
+            ( ( funcall goal? ( caddr best ) )
                 ; Returns the parent state of the
                 ; goal state followed by the goal state
                 ( list ( nth 3 best) ( nth 2 best ) )
-                ; Reformats and returns the best node
-;                ( reformat_node best )
             )
 
             ; If not base case:
@@ -131,10 +108,9 @@ Written Spring 2016 for CSC447/547 AI class.
                     ( map
                         'list
                         #'( lambda ( state )
-;                            ( make_node succ_g state best )
-                            ( make_node state best )
+                            ( make_node state best heuristic )
                         )
-                        ( successors ( caddr best ) )
+                        ( funcall successors ( caddr best ) )
                     )
                 )
 
@@ -144,7 +120,7 @@ Written Spring 2016 for CSC447/547 AI class.
                 ( setf closed_list ( cadr both ) )
                 
                 ; Recurses to get the return list
-                ( setf return_list ( A*_search open_list closed_list ) )
+                ( setf return_list ( A*_search open_list closed_list goal? successors heuristic ) )
                 
                 ; The return list holds the list of states that are all one
                 ; move different from their adjacent states, ending in the
@@ -171,39 +147,7 @@ Written Spring 2016 for CSC447/547 AI class.
             )
         )
     )
-;        )
-;    )
 )
-
-#|--------------------------------------------------------------------------|#
-#|                            Heuristic Function                            |#
-#|--------------------------------------------------------------------------|#
-
-; Heuristic function used to estimate the
-; distance a state is from the goal state.
-( defun heuristic ( state )
-    ( - ( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) ) 1 )
-)
-
-( defun count_wrong ( state goal )
-	( cond
-		( ( or ( not state ) ( not goal ) ) 0 )
-
-		( ( = ( car state ) ( car goal ) )
-			( count_wrong ( cdr state ) ( cdr goal ) )
-		)
-
-		( t
-			( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
-		)
-	)
-)
-
-#|
- | admis: number of values out of place ( minus one )
- | inadmis: number of values out ot place with consideration for distance needed to travel
- | inadmis: comparing sums of rows and columns
- |#
 
 #|--------------------------------------------------------------------------|#
 #|                             Other Functions                              |#
@@ -220,15 +164,15 @@ Written Spring 2016 for CSC447/547 AI class.
     ))
 )
 
-; Creates a node from a given state and its parent node.
+; Creates a node from a given state, its parent node, and a heuristic function.
 ; Nodes are of the following form:
 ;    ( g h' state parent-state )
 ;        g - the distance the state is from the start state
 ;        h' - the estimated distance the state is from the goal state
 ;        state - the state that the node holds in the state-space
 ;        parent-state - the state that the node's parent holds
-( defun make_node ( state parent)
-    ( list ( 1+ ( car parent ) ) ( heuristic state ) state ( caddr parent ) )
+( defun make_node ( state parent heuristic )
+    ( list ( 1+ ( car parent ) ) ( funcall heuristic state ) state ( caddr parent ) )
 )
 
 ; Recursively searches the open_list for the node with the smallest f value.
@@ -265,15 +209,10 @@ Written Spring 2016 for CSC447/547 AI class.
     ( let ( both )
         ; If elem is found in a_list:
         ( when ( member elem a_list :test #'equal )
-;            ( format t "HERE!" )
             ( setf a_list ( remove elem a_list :test #'equal ) )
             ( setf b_list ( cons elem b_list ) )
             ( setf both ( list a_list b_list ) )
         )
-;        ( format t "Returning from mov~%" )
-;        ( format t "    Elem: ~A~%" elem )
-;        ( format t "    Source-List: ~A~%" a_list )
-;        ( format t "    Dest-List: ~A~%~%" b_list )
         ; Returns updated lists
         both
     )
@@ -286,14 +225,10 @@ Written Spring 2016 for CSC447/547 AI class.
 ; same state. Returns the updated Open List and Closed List in the
 ; following format: ( (open_list) (closed_list) )
 ( defun process_succs ( succ_list open_list closed_list )
-;    ( format t "Processing Successor: ~A~%" ( car succ_list ) )
-;    ( format t "Processing Open: ~A~%" open_list )
-;    ( format t "Processing Closed: ~A~%~%" closed_list )
     ( let
         (
             ; The Successor node being processed
             ( succ ( car succ_list ) )
-;            ( both NIL )
             extra ; Holds a node found on the Closed List or Open List
         )
         ( cond
@@ -307,7 +242,6 @@ Written Spring 2016 for CSC447/547 AI class.
             ( t
                 ( cond
 
-;                    ( ( setf extra ( car ( member succ closed_list :test #'state_equal ) ) )
                     ; If the same state was found on the Closed List:
                     ( ( setf extra
 							( get_node_with_state ( caddr succ ) closed_list )
@@ -320,7 +254,6 @@ Written Spring 2016 for CSC447/547 AI class.
                         )
                     )
 
-;                    ( ( setf extra ( car ( member succ open_list :test #'state_equal ) ) )
                     ; If the same state was found on the Open List:
                     ( ( setf extra
 							( get_node_with_state ( caddr succ ) open_list )
@@ -377,3 +310,16 @@ Written Spring 2016 for CSC447/547 AI class.
 ;( defun test_list ()
 ;    '( ( 1 0 ( 1 2 3 4 5 6 7 8 0 ) ) ( 1 1 ( 0 8 7 6 5 4 3 2 1 ) ) )
 ;)
+
+;Because the heuristic function
+;will usually differ from problem to problem, it has been given its own section
+;on this file to make it easy to find and change.
+
+;These functions require that two functions be specified. The first function
+;required is of the form ( goal? state ) which takes a state and returns T if
+;the state given is the goal state or NIL otherwise. The second function
+;required is of the form ( successors state ) which takes a state and returns
+;a list of successor states. This function will dictate how the algorithm will
+;traverse the state-space. These functions may be specified in a file that is
+;loaded in under the Files Loaded section.
+

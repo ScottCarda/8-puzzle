@@ -97,3 +97,57 @@
         )        
     )
 )
+
+#|--------------------------------------------------------------------------|#
+#|                            Heuristic Function                            |#
+#|--------------------------------------------------------------------------|#
+
+; Heuristic function used to estimate the
+; distance a state is from the goal state.
+( defun heuristic ( state )
+    ( - ( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) ) 1 )
+)
+
+( defun count_wrong ( state goal )
+	( cond
+		( ( or ( not state ) ( not goal ) ) 0 )
+
+		( ( = ( car state ) ( car goal ) )
+			( count_wrong ( cdr state ) ( cdr goal ) )
+		)
+
+		( t
+			( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
+		)
+	)
+)
+
+( defun count_wrong_w_dist ( state goal N )
+    ( let
+        (
+            ( count 0 )
+            correct-pos
+        )
+        ( do ( i 0 ( 1+ i ) )
+            ( ( >= i ( length state ) ) )
+        
+            ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
+                ( setf correct-pos ( position ( nth i state ) goal ) )
+                
+                ( setf count ( + count
+                    ( abs ( - ( floor i N ) ( floor correct-pos N ) ) )
+                ) )
+                
+                ( setf count ( + count
+                    ( abs ( - ( mod i N ) ( mod correct-pos N ) ) )
+                ) )
+            )
+        )
+    )
+)
+
+#|
+ | admis: number of values out of place ( minus one )
+ | inadmis: number of values out ot place with consideration for distance needed to travel
+ | inadmis: comparing sums of rows and columns
+ |#
