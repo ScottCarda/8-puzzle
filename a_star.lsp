@@ -61,7 +61,7 @@ Written Spring 2016 for CSC447/547 AI class.
         ; Calls the recursive A*_search function
         ( A*_search
             ; Open List only has the starting node in it
-            ( list ( list 0 ( funcall #'C state ) state NIL ) )
+            ( list ( list 0 ( funcall heuristic state ) state NIL ) )
             ; Closed List is empty
             NIL
             goal?

@@ -105,10 +105,10 @@
 ; Heuristic function used to estimate the
 ; distance a state is from the goal state.
 ( defun heuristic ( state )
-    ( - ( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) ) 1 )
+    ( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) )
 )
 
-( defun count_wrong ( state goal )
+#|( defun count_wrong ( state goal )
 	( cond
 		( ( or ( not state ) ( not goal ) ) 0 )
 
@@ -120,34 +120,125 @@
 			( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
 		)
 	)
-)
+)|#
 
-( defun count_wrong_w_dist ( state goal N )
+( defun count_wrong ( state goal )
     ( let
         (
             ( count 0 )
+        )
+        
+        ( cond
+            
+            ( ( /= ( length state ) ( length goal ) )
+                NIL
+            )
+            
+            ( t
+                ( do
+                    (
+                        ( i 0 ( 1+ i ) )
+                    )
+                    
+                    ( ( >= i ( length state ) ) count )
+                    
+                    ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
+                        ( setf count ( + 1 count ) )
+                    )
+                )
+            )
+        )
+    )
+)
+
+( defun count_wrong_w_dist ( state goal )
+    ( let
+        (
+            ( count 0 )
+            ( puz-size ( isqrt ( length state ) ) )
             correct-pos
         )
-        ( do ( i 0 ( 1+ i ) )
-            ( ( >= i ( length state ) ) )
         
-            ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
-                ( setf correct-pos ( position ( nth i state ) goal ) )
-                
-                ( setf count ( + count
-                    ( abs ( - ( floor i N ) ( floor correct-pos N ) ) )
-                ) )
-                
-                ( setf count ( + count
-                    ( abs ( - ( mod i N ) ( mod correct-pos N ) ) )
-                ) )
+        ( cond
+    
+            ( ( /= ( length state ) ( length goal ) )
+                NIL
+            )
+            
+            ( t    
+                ( do
+                    (
+                        ( i 0 ( 1+ i ) )
+                    )
+            
+                    ( ( >= i ( length state ) ) ( / count 2 ) )
+            
+                    ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
+                        ( setf correct-pos ( position ( nth i state ) goal ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
+                        ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
+                        ) )
+                    )
+                )
+            )
+        )
+    )
+)
+
+( defun count_wrong_w_rot ( state goal )
+    ( let
+        (
+            ( lst ( copy-list state ) )
+            ( count 0 )
+            ( puz-size ( isqrt ( length state ) ) )
+            correct-pos
+        )
+        
+        ( cond
+    
+            ( ( /= ( length lst ) ( length goal ) )
+                NIL
+            )
+            
+            ( t    
+                ( do
+                    (
+                        ( i 0 ( 1+ i ) )
+                    )
+            
+                    ( ( >= i ( length lst ) ) count )
+            
+                    ( do ()
+                        ( ( eq ( nth i lst ) ( nth i goal ) ) )
+                        
+                        ( setf correct-pos ( position ( nth i lst ) goal ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
+                        ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
+                        ) )
+                        
+                        ;( format t "Position ~D: ~A was changed to " i lst )
+                        ( rotatef ( nth i lst ) ( nth correct-pos lst ) )
+                        ;( format t "~A" lst )
+                        
+                    )
+                )
             )
         )
     )
 )
 
 #|
+ | admis: number of values out of place with consideration for distance needed to travel ( div 2 )
  | admis: number of values out of place ( minus one )
- | inadmis: number of values out ot place with consideration for distance needed to travel
  | inadmis: comparing sums of rows and columns
  |#
