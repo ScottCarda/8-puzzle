@@ -182,8 +182,28 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Heuristic function used to estimate the
 ; distance a state is from the goal state.
 ( defun heuristic ( state )
-    1
+    ( - ( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) ) 1 )
 )
+
+( defun count_wrong ( state goal )
+	( cond
+		( ( or ( not state ) ( not goal ) ) 0 )
+
+		( ( = ( car state ) ( car goal ) )
+			( count_wrong ( cdr state ) ( cdr goal ) )
+		)
+
+		( t
+			( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
+		)
+	)
+)
+
+#|
+ | admis: number of values out of place ( minus one )
+ | inadmis: number of values out ot place with consideration for distance needed to travel
+ | inadmis: comparing sums of rows and columns
+ |#
 
 #|--------------------------------------------------------------------------|#
 #|                             Other Functions                              |#

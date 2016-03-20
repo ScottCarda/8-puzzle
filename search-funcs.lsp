@@ -53,3 +53,47 @@
         (null found_goal)
     )
 )
+
+; Takes a puzzle expressed in row-major order and returns the same puzzle
+; expressed in spiral (clock-wise) order
+( defun rows-to-spiral ( lst N )
+    ( let
+        (
+            ( spiral NIL )  ; The puzzle listed in spiral format
+            ( temp-lst ( copy-list lst ) )  ; Local copy of lst
+        )
+        
+        ( cond
+            ; Base case of list with only one element
+            ( ( = ( length lst ) 1 ) lst )
+
+            ; Else gets top row and right-most column and recurse
+            ( t
+                ; Gets top row
+                ( do ( ( i 0 ( 1+ i ) ) )
+                    ( ( >= i ( - N 1 ) ) )
+                    ; Puts top row into spiral
+                    ( setf spiral ( append spiral ( list ( nth i temp-lst ) ) ) )
+                    ; Sets up top row for removal
+                    ( setf ( nth i temp-lst ) -1 )
+                )
+
+                ; Gets right-most column
+                ( do ( ( i ( - N 1 ) ( setf i ( + N i ) ) ) )
+                    ( ( > i ( - ( * N N ) 1 ) ) )
+                    ; Puts right-most column into spiral
+                    ( setf spiral ( append spiral ( list ( nth i lst ) ) ) )
+                    ; Sets up right-most column for removal
+                    ( setf ( nth i temp-lst ) -1 )
+                )
+
+                ; Sets up N-1 by N-1 puzzle by removing top row and
+                ; right-most column from the puzzle and reversing the puzzle
+                ( setf temp-lst ( reverse ( remove -1 temp-lst ) ) )
+
+                ; Recurses with N-1 by N-1 puzzle
+                ( append spiral ( rows-to-spiral temp-lst ( - N 1 ) ) )
+            )
+        )        
+    )
+)
