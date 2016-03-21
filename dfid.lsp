@@ -13,7 +13,6 @@ Written Spring 2016 for CSC447/547 AI class.
 ( defparameter *generated* 0 )
 ( defparameter *distinct* 0 )
 ( defparameter *expanded* 0 )
-( defparameter *pathlength* 0 )
 
 #|--------------------------------------------------------------------------|#
 #|                               Files Loaded                               |#
@@ -36,6 +35,7 @@ Written Spring 2016 for CSC447/547 AI class.
 			;second basis case if we are as deep as we are 
 			;allowed to go
 			( ( >= ( + currentDepth 1 ) maxDepth )
+				( incf *distinct* )
 				nil
 			)
 			;recursion if pervious 2 not done
@@ -46,16 +46,6 @@ Written Spring 2016 for CSC447/547 AI class.
 					( when ( not goalFound )
 						;counts each child generated
 						( incf *generated* )
-						;checks if child is distinct
-						( cond
-							( ( member succ goalFound )
-								nil
-							)
-							( t
-							;counts each child generated that is distinct
-								( incf *distinct* )
-							)
-						)
 						;actual recursive call, storing the return value
 						( setf goalFound ( deepSearch succ maxDepth ( 1+ currentDepth ) ) )
 					)
@@ -76,14 +66,21 @@ Written Spring 2016 for CSC447/547 AI class.
 
 ( defun dfid ( startState )
 	( let ( ( searchDepth 0 ) pathReturn )
+		;initializes globals for this function
+		( setf *generated* 0 )
+		( setf *distinct* 0 )
+		( setf *expanded* 0 )
 		;while loop which continues to increase depth and call dfid
 		;if the goal is not yet found
 		( loop while ( not pathReturn ) do
 			( setf pathReturn ( deepSearch startState searchDepth 0 ) )
 			( incf searchDepth )
 		)
-		;captures final path length
-		( setf *pathlength* ( - ( length pathreturn ) 1 ) )
+		( format t "~a" *generated* )
+		( format t "~a" " " )
+		( format t "~a" *distinct* )
+		( format t "~a" " " )
+		( format t "~a" *expanded* )
 		pathReturn
 	)
 )
