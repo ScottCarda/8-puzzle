@@ -20,17 +20,38 @@ Modifications:
 #|                           Statistics Printout                            |#
 #|--------------------------------------------------------------------------|#
 ;Print out the stats pertaining to the algorithm used
-( defun print_stats ()
-    ;eventually add stats to the parameter
-    ;(format t "~S graph search~%" algorithm ) 
-    (format t "~%<Whatever> graph search~%"  ) 
-    (format t "----------------------------------------------~%")
-    ;(format t "Solution found in ~S moves~%" moves ) 
-    (format t "Solution found in X moves~%" ) 
-    ;(format t "~S nodes generated (~S distinct nodes), ~S nodes expanded~%" n_gen n_distinct n_expanded)
-    (format t "31 nodes generated (22 distinct nodes), 10 nodes expanded~%")
-)
+( defun print_stats 
+    (
+        puzzle
+        &optional ( search-type "BFS" )
+                  ( heuristic nil )
 
+    )
+    ( let 
+        (
+            ( moves ( - (length puzzle) 1 ) )
+        )
+        
+        ;eventually add stats to the parameter
+        ;(format t "~S graph search~%" algorithm ) 
+        (format t "~%~A graph search " search-type ) 
+        ( if ( null heuristic ) 
+            ;TRUE
+            ( format t "~%" )
+            
+            ;FALSE
+            ( format t "( heuristic: ~A )~%" heuristic )
+        )
+
+        ( format t "---------------------------------------------------------~%" )
+        ;(format t "Solution found in ~S moves~%" moves ) 
+        ( format t "Solution found in ~A moves~%" moves ) 
+        ;(format t "~S nodes generated (~S distinct nodes), ~S nodes expanded~%" n_gen n_distinct n_expanded)
+        ( format t "31 nodes generated "   )
+        ( format t "(22 distinct nodes), " )
+        ( format t "10 nodes expanded~%"   )
+    )
+)
 
 #|--------------------------------------------------------------------------|#
 #|                              Print Puzzles                               |#
@@ -45,12 +66,17 @@ Modifications:
     ;Given a list of puzzle states, print them all out
     (let 
         ( 
-            (per_column col_size ) 
-            ( per_row 0 )
+            ;values per row and column
+            ( per_column col_size ) 
+            ( per_row   0         )
+
+            ;row and column iterators
             ( col 0 ) 
             ( row 0 )
+
+            ;counter variables used for keeping track of position
             ( x 0 ) 
-            ( y 0) 
+            ( y 0 ) 
             ( count (length all_puzzles) ) 
 
             ( puz_width  3 )
@@ -58,17 +84,18 @@ Modifications:
 
             ( j 0 )
             ( puz_itr   0 )
-            ( arrow_itr 0 )
         )
         
+        ;Set remaining variables
         ( setf puz_width ( sqrt ( + n_value 1 ) ) )
         ( setf puz_height puz_width )
-        ( setf per_row puz_height )
+        ( setf per_row puz_height   )
+
         ;print out statistics of the algorithm
         ;will later have to modify this to handle
         ;inputting the actual stats, currently does
         ;nothing!
-        ( print_stats )
+        ( print_stats all_puzzles '"BFS" '"whatever I want")
 
         ;col monitors the column total, so there are
         ;<col> states per row.
@@ -89,8 +116,6 @@ Modifications:
                 ;Reset some iterators 
                 ( setq col 0 )
                 ( setq y   x )
-
-                ( setf arrow_itr 0 )
 
                 ;Print col_size many puzzles
                 ( loop while ( and ( < col per_column )( < y count ) ) do
@@ -118,7 +143,6 @@ Modifications:
                     ( setq col       ( + 1 col       ) )
                     ( setq y         ( + 1 y         ) )
                 )
-                ( setq arrow_itr ( + 1 arrow_itr ) )
 
                 ;increment puz_iterator to get the next row of a given block
                 ( setf puz_itr (+ puz_itr per_row))
