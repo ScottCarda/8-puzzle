@@ -52,6 +52,7 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Number of states that were selected for
 ; generating successors by the A* algorithm
 ( defparameter *expanded* 0 )
+( defparameter *search-type* '"A*" )
 
 
 #|--------------------------------------------------------------------------|#
@@ -74,6 +75,7 @@ Written Spring 2016 for CSC447/547 AI class.
     ( setf *generated* 0 )
     ( setf *distinct* 1 )
     ( setf *expanded* 0 )
+    ( setf *search-type* '"A*" )
 
     ; Stripes off the leading NIL from the returned list of states
     ( cdr

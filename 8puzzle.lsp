@@ -27,21 +27,17 @@ Modifications:
             ( format t "Please enter a puzzle:" )
             ; Replace this with the search algorithm to be run
             ;( printState ( read-puzzle ) )
-            ;( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) 4 )
+            ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1 ) 4 )
             
         )
         
     		
         ( t
-            ; Replace this with the search algorithm to be run
-            ;( printState puzzlelist )
-            ( print_puzzle ( a* puzzlelist #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1) 4 )
 
 
 
             ;BFS
-            ( setf bfs_answer ( bfs puzzlelist ) )
-            ( print_puzzle bfs_answer )
+            ( print_puzzle ( bfs puzzlelist ) )
 
             ;DFID*
             ;Add DFID Solution steps here, and then print
@@ -49,7 +45,8 @@ Modifications:
 
             ;A*
             ;Add A* Solution(s) here, and then print
-            ; ( print_puzzle a_star_answer )
+            ( print_puzzle ( a* puzzlelist #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1) 4 )
+
 
         )
     )
