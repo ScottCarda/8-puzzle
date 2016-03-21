@@ -41,6 +41,11 @@ Written Spring 2016 for CSC447/547 AI class.
 
 |#
 
+( defparameter *generated* 0 )
+( defparameter *distinct* 0 )
+( defparameter *expanded* 0 )
+
+
 #|--------------------------------------------------------------------------|#
 #|                               Files Loaded                               |#
 #|--------------------------------------------------------------------------|#
@@ -56,6 +61,12 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Performs the A* algorithm given a starting state, goal predicate function,
 ; successor generation function, and a static evaluation heuristic function.
 ( defun A* ( state goal? successors heuristic )
+
+    ; Reset glogal counters
+    ( setf *generated* 0 )
+    ( setf *distinct* 1 )
+    ( setf *expanded* 0 )
+
     ; Stripes off the leading NIL from the returned list of states
     ( cdr
         ; Calls the recursive A*_search function
@@ -113,6 +124,12 @@ Written Spring 2016 for CSC447/547 AI class.
                         ( funcall successors ( caddr best ) )
                     )
                 )
+                
+                ; Update number of nodes expanded
+                ( setf *expanded* ( + *expanded* 1 ) )
+                
+                ; Update number of nodes generated
+                ( setf *generated* ( + *generated* ( length succ_list ) ) )
 
                 ; Processes successors
                 ( setf both ( process_succs succ_list open_list closed_list ) )
@@ -270,6 +287,9 @@ Written Spring 2016 for CSC447/547 AI class.
                     ( t
                         ; Puts succ on Open List
                         ( setf open_list ( cons succ open_list ) )
+                        
+                        ; Update number of distinct nodes
+                        ( setf *distinct* ( + *distinct* 1 ) )
                     )
                 )
 

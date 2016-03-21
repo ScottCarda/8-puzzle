@@ -105,7 +105,8 @@
 ; Heuristic function used to estimate the
 ; distance a state is from the goal state.
 ( defun heuristic ( state )
-    ( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) )
+    ;( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) )
+    0
 )
 
 #|( defun count_wrong ( state goal )
