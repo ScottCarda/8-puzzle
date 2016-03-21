@@ -1,5 +1,22 @@
-( load 'search-funcs )
+#|
+                    ***** 8PUZZLE.LSP *****
+
+8 Puzzle program for Artificial Intelligence.
+
+Authors: J. Anthony Brackins, Scott Carda, Leif Torgersen
+Written Spring 2016 for CSC447/547 AI class.
+
+Modifications:
+
+|#
+
+
+
+( load 'bfs )
 ( load 'a_star )
+;( load '"DepthFirstID")
+( load 'mapper )
+( load 'search-funcs )
 ( load 'print_puzzle )
 
 ( defun 8puzzle ( &optional puzzlelist )
@@ -10,19 +27,27 @@
             ( format t "Please enter a puzzle:" )
             ; Replace this with the search algorithm to be run
             ;( printState ( read-puzzle ) )
-            ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) 4 )
+            ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1 ) 4 )
             
         )
         
-        ( ( < ( length puzzlelist ) 9 )
-        
-            ( format t "Error: Incorrect puzzle size!" )
-        )
     		
         ( t
-            ; Replace this with the search algorithm to be run
-            ;( printState puzzlelist )
-            ( print_puzzles ( a* puzzlelist #'goal? #'successors #'heuristic ) 4 )
+
+
+
+            ;BFS
+            ( print_puzzle ( bfs puzzlelist ) )
+
+            ;DFID*
+            ;Add DFID Solution steps here, and then print
+            ;( print_puzzle dfid_answer )
+
+            ;A*
+            ;Add A* Solution(s) here, and then print
+            ( print_puzzle ( a* puzzlelist #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1) 4 )
+
+
         )
     )
 	

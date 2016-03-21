@@ -48,8 +48,9 @@ Modifications:
                 ( dotimes ( i width )
                     ;perform swap
                     ;( rotatef ( nth location RIGHT ) ( nth ( + location 1 ) RIGHT ) )
-                    ( setf ( nth cursor puzzle ) itr )
-
+                    ( if ( <= itr n_value )
+                        ( setf ( nth cursor puzzle ) itr )
+                    )
                     ;increment iterator
                     ( setf itr    ( + itr 1    ) )
 
@@ -76,8 +77,9 @@ Modifications:
                 ( dotimes ( i height )
                     ;perform swap
                     ;( rotatef ( nth location RIGHT ) ( nth ( + location 1 ) RIGHT ) )
-                    ( setf ( nth cursor puzzle ) itr )
-                    
+                    ( if ( <= itr n_value )
+                        ( setf ( nth cursor puzzle ) itr )
+                    )                    
 
                     ;increment iterator
                     ( setf itr    ( + itr 1    ) )
@@ -104,8 +106,9 @@ Modifications:
                 ( dotimes ( i width )
                     ;perform swap
                     ;( rotatef ( nth location RIGHT ) ( nth ( + location 1 ) RIGHT ) )
-                    ( setf ( nth cursor puzzle ) itr )
-                    
+                    ( if ( <= itr n_value )
+                        ( setf ( nth cursor puzzle ) itr )
+                    )                    
                     ;increment iterator
                     ( setf itr    ( + itr 1    ) )
                     
@@ -131,8 +134,9 @@ Modifications:
                 ( dotimes ( i height )
                     ;perform swap
                     ;( rotatef ( nth location RIGHT ) ( nth ( + location 1 ) RIGHT ) )
-                    ( setf ( nth cursor puzzle ) itr )
-                    
+                    ( if ( <= itr n_value )
+                        ( setf ( nth cursor puzzle ) itr )
+                    )                    
                     ;increment iterator
                     ( setf itr    ( + itr 1    ) )
                     
