@@ -58,6 +58,7 @@ Modifications:
 
             ( j 0 )
             ( puz_itr   0 )
+            ( arrow_itr 0 )
         )
         
         ( setf puz_width ( sqrt ( + n_value 1 ) ) )
@@ -86,23 +87,39 @@ Modifications:
                 ( format t "~%    " )
 
                 ;Reset some iterators 
-                ( setq col 0)
-                ( setq y x)
+                ( setq col 0 )
+                ( setq y   x )
+
+                ( setf arrow_itr 0 )
 
                 ;Print col_size many puzzles
-                ( loop while (and ( < col per_column )( < y count )) do
+                ( loop while ( and ( < col per_column )( < y count ) ) do
                     ;Print out some puzzles, why don't ya!
-                    ( if (< y (- count 1 ) ) 
+                    ;Check to see if you have any more puzzles to print
+                    ( if ( < y (- count 1 ) ) 
+
                         ;TRUE - Print out an arrow, there are still more puzzles!
-                        ( print_slice ( nth y all_puzzles  ) puz_width puz_itr t  )
+                        ;Also check that the given slice is in the "middle" of the 
+                        ;puzzle so that it properly only prints out one arrow.
+                        ( if 
+                            ( and ( > puz_itr ( - (floor n_value 2) puz_width  ) ) 
+                                  ( < puz_itr (floor n_value 2) ) )
+                                        ;TRUE: this is the center slice, so print the arrow
+                                        ( print_slice ( nth y all_puzzles  ) puz_width puz_itr t )
+                                        ;FALSE: this is not the center slice, no arror needed
+                                        ( print_slice ( nth y all_puzzles  ) puz_width puz_itr )
+                        )
 
                         ;FALSE - No More arrows, you're at the end of the list!
                         ( print_slice ( nth y all_puzzles  ) puz_width puz_itr )
                     )
+
                     ;increment iterators for traversing each block of puzzles
-                    ( setq col (+ 1 col))
-                    ( setq y (+ 1 y))
+                    ( setq col       ( + 1 col       ) )
+                    ( setq y         ( + 1 y         ) )
                 )
+                ( setq arrow_itr ( + 1 arrow_itr ) )
+
                 ;increment puz_iterator to get the next row of a given block
                 ( setf puz_itr (+ puz_itr per_row))
             )
@@ -136,6 +153,8 @@ Modifications:
         (
             ( start 0 )
             ( stop  0 )
+            ( val nil )
+            ( plength ( length puzzle ) )
         )
 
         ( setf start itr )
@@ -144,19 +163,34 @@ Modifications:
         ;(print start)
         ;(print stop)
         ;format puzzle
-            ( loop for i from start to stop 
-                do 
+        ( loop for i from start to stop 
+            do 
 
-                ( setf val ( format_char ( nth i puzzle ) ) )
-                (format t "~A " val )
+            ( setf val ( nth i puzzle ) )
+            ( cond 
+                ;If you're doing a puzzle larger than 8-puzzle, You'll
+                ;have to add additional spacing for single digit values 
+                ;to balance out the print margins. You'd technically have to 
+                ;do this for 3 spaces once you got to the 120 puzzle, but UGH
+                ;why would you EVER...
+                ( ( and ( > plength 9 ) ( < val 10  ) )     
+                    ( setf val ( format_char ( nth i puzzle ) ) )
+                    (format t " ~A " val )
+                )
+                ( t
+                    ( setf val ( format_char ( nth i puzzle ) ) )
+                    (format t "~A " val )
+                )
             )
 
-            (cond
-                ;If this is the last state, don't draw an error
-                ( (null last) (format t "      " )  )
-                ;Otherwise, do draw another arrow
-                ( T           (format t "  ->  " )  ) 
-            )
+        )
+
+        (cond
+            ;If this is the last state, don't draw an error
+            ( (null last) ( format t "      " )  )
+            ;Otherwise, do draw another arrow
+            ( T           ( format t "  ->  " )  ) 
+        )
         
     )
 )
@@ -164,12 +198,18 @@ Modifications:
 
 
 ;Print out a character in the puzzle map with proper formatting
-( defun format_char (val)
-    ;Zeroes show up as blanks in the puzzle display.
-    (cond
-        ( (= val 0) 
-            (setq x " "))
-        (t 
-            (setq x val))
+( defun format_char ( val )
+    ( let
+        (
+            (x nil)
+        )
+        ;Zeroes show up as blanks in the puzzle display.
+        (cond
+            ( (= val 0) 
+                (setq x " "))
+            (t 
+                (setq x val))
+        )
+        x
     )
 )
