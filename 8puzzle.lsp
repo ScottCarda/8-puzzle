@@ -1,3 +1,7 @@
+( load 'search-funcs )
+( load 'a_star )
+( load 'print_puzzle )
+
 ( defun 8puzzle ( &optional puzzlelist )
     ( cond
         
@@ -5,7 +9,8 @@
         
             ( format t "Please enter a puzzle:" )
             ; Replace this with the search algorithm to be run
-            ( printState ( read-puzzle ) )
+            ;( printState ( read-puzzle ) )
+            ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) 4 )
             
         )
         
@@ -16,7 +21,8 @@
     		
         ( t
             ; Replace this with the search algorithm to be run
-            ( printState puzzlelist )
+            ;( printState puzzlelist )
+            ( print_puzzles ( a* puzzlelist #'goal? #'successors #'heuristic ) 4 )
         )
     )
 	
