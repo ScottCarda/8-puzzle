@@ -1,4 +1,4 @@
-
+#|
                     ***** 8PUZZLE.LSP *****
 
 8 Puzzle program for Artificial Intelligence.
@@ -13,7 +13,7 @@ Modifications:
 
 
 ( load 'bfs )
-;( load 'a_star )
+( load 'a_star )
 ;( load '"DepthFirstID")
 ( load 'mapper )
 ( load 'search-funcs )
@@ -27,7 +27,7 @@ Modifications:
             ( format t "Please enter a puzzle:" )
             ; Replace this with the search algorithm to be run
             ;( printState ( read-puzzle ) )
-            ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) 4 )
+            ;( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) 4 )
             
         )
         
@@ -35,7 +35,7 @@ Modifications:
         ( t
             ; Replace this with the search algorithm to be run
             ;( printState puzzlelist )
-            ( print_puzzles ( a* puzzlelist #'goal? #'successors #'heuristic ) 4 )
+            ( print_puzzle ( a* puzzlelist #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1) 4 )
 
 
 
