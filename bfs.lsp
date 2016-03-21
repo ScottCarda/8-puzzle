@@ -10,7 +10,6 @@ Modifications:
 
 |#
 
-
 #|--------------------------------------------------------------------------|#
 #|                               Files Loaded                               |#
 #|--------------------------------------------------------------------------|#
@@ -21,6 +20,16 @@ Modifications:
 ( load 'mapper )
 
 #|--------------------------------------------------------------------------|#
+#|                               Global Vars                                |#
+#|--------------------------------------------------------------------------|#
+
+( defparameter *generated* 0 )
+( defparameter *distinct*  1 )
+( defparameter *expanded*  0 )
+( defparameter *heuristic*  nil )
+( defparameter *search-type*  "BFS" )
+
+#|--------------------------------------------------------------------------|#
 #|                                Structs                                   |#
 #|--------------------------------------------------------------------------|# 
 
@@ -28,13 +37,26 @@ Modifications:
 ( defstruct node state parent )
 
 ; Test if two nodes have the same state.
-(defun equal-states (n1 n2) (equal (node-state n1) (node-state n2)))
+( defun equal-states (n1 n2) (equal (node-state n1) (node-state n2)))
 
+( defun bfs ( puz_state )
+
+    ;clear out global vars
+    ( setf *generated* 0 )
+    ( setf *distinct*  1 )
+    ( setf *expanded*  0 )
+    ( setf *heuristic*  nil )
+    ( setf *search-type*  "BFS" )
+
+    ;iterative bfs-search using do*
+    ( bfs-search-do puz_state )
+
+)
 
 #|--------------------------------------------------------------------------|#
 #|                              BFS Functions                               |#
 #|--------------------------------------------------------------------------|#
-( defun bfs ( puz_state )
+( defun bfs-search-do ( puz_state )
     (do*
         (
             (current ( make-node :state puz_state :parent nil ) )
@@ -76,9 +98,13 @@ Modifications:
         ( setf closed_list ( cons current closed_list ) )
 
 
-        ; add successors of current node to OPEN
+        ;we're about to expand another node, so increment counter
+        ( incf *expanded* )
         ( setf successor_lst ( successors (node-state current) ) )
 
+        ; add successors of current node to OPEN
+
+        ( setf *generated* ( + *generated* ( length successor_lst ) ) )
         ;( format t "CURRENT   : ~A~%" (node-state current) )
         ;( format t "SUCCESSORS: ~A~%~%" successor_lst )
         
@@ -91,27 +117,27 @@ Modifications:
             ; add to the end of the list
             ( setf temp_node  ( make-node :state s :parent current ) )
             ;probably change this to COND so we can update the stats
-            ( if 
-                ;if both these conditions are not met
-                ( and
-                  ( not ( member temp_node open_list   :test #'equal-states) )
-                  ( not ( member temp_node closed_list :test #'equal-states) )
-                )
-                
-                ;add the successor to the open list
-                ;added in node struct to preserve path back to start
-                ( setf open_list 
+            ( cond
+                (
+                    ;if both these conditions are not met
+                    ( and
+                      ( not ( member temp_node open_list   :test #'equal-states) )
+                      ( not ( member temp_node closed_list :test #'equal-states) )
+                    )
+                    
+                    ;add the successor to the open list
+                    ;added in node struct to preserve path back to start
+                    
+                    ;increment number of distinct nodes
+                    ( incf *distinct* )
+                    ( setf open_list 
 
-                    ;append first item then second item,
-                    ;in this case the rest of the open list is the 
-                    ;first item, the new successor is the second item.
-                    ( append open_list 
-                            ( list 
-                                temp_node
-                            )
+                        ;append first item then second item,
+                        ;in this case the rest of the open list is the 
+                        ;first item, the new successor is the second item.
+                        ( append open_list  ( list temp_node ) )
                     )
                 )
-                ;( format t "Already in puzzle~%")
             )
         )
     )

@@ -15,7 +15,6 @@ Modifications:
 
 |#
 
-
 #|--------------------------------------------------------------------------|#
 #|                           Statistics Printout                            |#
 #|--------------------------------------------------------------------------|#
@@ -23,9 +22,6 @@ Modifications:
 ( defun print_stats 
     (
         puzzle
-        &optional ( search-type "BFS" )
-                  ( heuristic nil )
-
     )
     ( let 
         (
@@ -34,22 +30,22 @@ Modifications:
         
         ;eventually add stats to the parameter
         ;(format t "~S graph search~%" algorithm ) 
-        (format t "~%~A graph search " search-type ) 
-        ( if ( null heuristic ) 
+        (format t "~%~A graph search " *search-type* ) 
+        ( if ( null *heuristic* ) 
             ;TRUE
             ( format t "~%" )
             
             ;FALSE
-            ( format t "( heuristic: ~A )~%" heuristic )
+            ( format t "( heuristic: ~A )~%" *heuristic* )
         )
 
         ( format t "---------------------------------------------------------~%" )
         ;(format t "Solution found in ~S moves~%" moves ) 
         ( format t "Solution found in ~A moves~%" moves ) 
         ;(format t "~S nodes generated (~S distinct nodes), ~S nodes expanded~%" n_gen n_distinct n_expanded)
-        ( format t "31 nodes generated "   )
-        ( format t "(22 distinct nodes), " )
-        ( format t "10 nodes expanded~%"   )
+        ( format t "~A nodes generated "   *generated* )
+        ( format t "(~A distinct nodes), " *distinct* )
+        ( format t "~A nodes expanded~%"   *expanded* )
     )
 )
 
@@ -57,7 +53,7 @@ Modifications:
 #|                              Print Puzzles                               |#
 #|--------------------------------------------------------------------------|#
 ;Print out all of the n-puzzle transitions that led to the solution
-( defun print_puzzles 
+( defun print_puzzle
     ( 
         all_puzzles 
         &optional ( n_value 8 ) ( col_size 4 ) 
@@ -95,7 +91,11 @@ Modifications:
         ;will later have to modify this to handle
         ;inputting the actual stats, currently does
         ;nothing!
-        ( print_stats all_puzzles '"BFS" '"whatever I want")
+        ( print_stats all_puzzles ) 
+        
+        
+        ;just to make super sure, let's reset the global vars here
+
 
         ;col monitors the column total, so there are
         ;<col> states per row.
