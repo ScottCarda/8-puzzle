@@ -11,6 +11,9 @@ Modifications:
 |#
 
 
+#|--------------------------------------------------------------------------|#
+#|                               Files Loaded                               |#
+#|--------------------------------------------------------------------------|#
 
 ( load 'bfs )
 ( load 'a_star )
@@ -19,12 +22,15 @@ Modifications:
 ( load 'search-funcs )
 ( load 'print_puzzle )
 
+#|--------------------------------------------------------------------------|#
+#|                             8 Puzzle Routine                             |#
+#|--------------------------------------------------------------------------|#
+
 ( defun 8puzzle ( &optional puzzlelist )
     ( cond
         
         ( ( = ( length puzzlelist ) 0 )
         
-            ( format t "Please enter a puzzle:" )
             ; Replace this with the search algorithm to be run
             ;( printState ( read-puzzle ) )
             ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1 ) 4 )
@@ -60,6 +66,11 @@ Modifications:
 	( values )
 )
 
+
+#|--------------------------------------------------------------------------|#
+#|                       Read In Puzzle from CLI                            |#
+#|--------------------------------------------------------------------------|#
+
 ( defun read-puzzle ()
     ( let ( ( str ( read-line ) ) )
         ( with-input-from-string ( stream str )
@@ -68,16 +79,9 @@ Modifications:
     )
 )
 
-( defun printState ( state )
-    ( let ( ( i 0 ) )
-        ( dolist ( elem state )
-            ( if ( = ( mod i 3 ) 0 ) ( format t "~%" ) )
-            ( format t "~D " elem )
-            ( setf i ( 1+ i ) )
-        )
-    )
-    ( values )
-)
+#|--------------------------------------------------------------------------|#
+#|                      Read In Puzzle from File                            |#
+#|--------------------------------------------------------------------------|#
 
 ( defun read-puzzle-file ( filename )
     ( let ( ( file ( open filename ) ) puzzlelist )
@@ -103,16 +107,21 @@ Modifications:
     )
 )
 
+#|--------------------------------------------------------------------------|#
+#|                              MAIN FUNCTION                               |#
+#|--------------------------------------------------------------------------|#
+
 ( defun main ()
-	;( cond 
-	;	( ( not ( = ( length *args* ) 1 ) )
-	;		( format t "Usage statement!" )
-	;	)
-    ;
-	;	( t 
-	;		( 8puzzle ( read-puzzle-file ( car *args* ) ) )
-	;	)
-	;)
+	( cond 
+        ;No arguments, so read in the puzzle from CLI
+		( ( not ( = ( length *args* ) 1 ) )
+            ( format t "~%Please enter a puzzle:~%>>" )
+            ( 8puzzle ( read-puzzle ) )
+		)
+
+	)
+
+    ;File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
     )
