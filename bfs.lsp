@@ -26,8 +26,6 @@ Modifications:
 ( defparameter *generated* 0 )
 ( defparameter *distinct*  1 )
 ( defparameter *expanded*  0 )
-( defparameter *heuristic*  nil )
-( defparameter *search-type*  "BFS" )
 
 #|--------------------------------------------------------------------------|#
 #|                                Structs                                   |#
@@ -45,8 +43,6 @@ Modifications:
     ( setf *generated* 0 )
     ( setf *distinct*  1 )
     ( setf *expanded*  0 )
-    ( setf *heuristic*  nil )
-    ( setf *search-type*  "BFS" )
 
     ;iterative bfs-search using do*
     ( bfs-search-do puz_state )

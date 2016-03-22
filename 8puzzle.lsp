@@ -37,15 +37,20 @@ Modifications:
 
 
             ;BFS
-            ( print_puzzle ( bfs puzzlelist ) )
+            ( setf bfs_answer ( bfs puzzlelist ) )
+            ( print_stats bfs_answer '"BFS" )
+            ( print_puzzle bfs_answer ( - ( length puzzlelist ) 1) 4 )
+
 
             ;DFID*
             ;Add DFID Solution steps here, and then print
             ;( print_puzzle dfid_answer )
 
             ;A*
-            ;Add A* Solution(s) here, and then print
-            ( print_puzzle ( a* puzzlelist #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1) 4 )
+            ( setf a_star_answer ( a* puzzlelist #'goal? #'successors #'heuristic ) )
+            ( print_stats a_star_answer '"A*" '"heuristic-name" )
+            ( print_puzzle a_star_answer ( - ( length puzzlelist ) 1) 4 )
+
 
 
         )
