@@ -40,20 +40,17 @@ Modifications:
             a_star_answer
         )
     
-
-        ( cond 
-            ;If n > 8 just flag as ok, since
-            ;solvable func doesnt work for non
-            ;8puzzles
-            ( ( null puzzlelist )
+        ;If n > 8 just flag as ok, since
+        ;solvable func doesnt work for non
+        ;8puzzles
+        ( when ( null puzzlelist )
                 ( format t "~%Please enter a puzzle:~%>>" )
                 ( 8puzzle ( read-puzzle ) )
-            )
         )
 
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
-        ( cond 
+        #|( cond 
             ;If n > 8 just flag as ok, since
             ;solvable func doesnt work for non
             ;8puzzles
@@ -71,7 +68,9 @@ Modifications:
             ( t
                 ( setf ok nil )
             )
-        )
+        )|#
+        
+        ( setf ok T )
 
     
         ;If the program has passed "solvable" or 
@@ -103,6 +102,8 @@ Modifications:
                 ( print_puzzle a_star_answer n puzzles_per_row )
             )
         )
+        
+        ( values )
     )
 )
 
