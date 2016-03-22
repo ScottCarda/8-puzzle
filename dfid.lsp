@@ -18,7 +18,7 @@ Written Spring 2016 for CSC447/547 AI class.
 #|                       Recursive DFS with make depth                      |#
 #|--------------------------------------------------------------------------|#
 
-( defun deepSearch ( currentState maxDepth currentDepth n_value 8  )
+( defun deepSearch ( currentState maxDepth currentDepth n_value )
 	( let ( goalFound goalState )
 		;this sets the goal if not 8 puzzle
 		( when ( not ( = n_value 8 ) )
