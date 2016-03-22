@@ -98,7 +98,8 @@ Modifications:
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
                     #'( lambda ( state ) ( count_wrong state goal ) )
-                ( print_stats a_star_answer '"A*" '"heuristic-name" )
+                ) )
+                ( print_stats a_star_answer '"A*" '"Count Incorrect Elements" )
                 ( print_puzzle a_star_answer n puzzles_per_row )
             )
         )
