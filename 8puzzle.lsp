@@ -31,7 +31,7 @@ Modifications:
     ( let 
         ( 
             ( puzzles_per_row 4 )
-            ( goal NIL )
+            ( goal nil )
             ( n nil )
             ok
 
@@ -90,11 +90,14 @@ Modifications:
                 ( print_stats dfid_answer '"DFID" )
                 ( print_puzzle dfid_answer n puzzles_per_row )
 
+                ;Generate goal state for a* function arguments
+                ( setf goal ( generate_goal ( - ( length puzzlelist ) 1 ) ) )
+
                 ;A*
                 ( setf a_star_answer ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'heuristic ) )
+                    #'( lambda ( state ) ( count_wrong state goal ) )
                 ( print_stats a_star_answer '"A*" '"heuristic-name" )
                 ( print_puzzle a_star_answer n puzzles_per_row )
             )
