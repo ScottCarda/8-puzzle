@@ -100,7 +100,7 @@ Written Spring 2016 for CSC447/547 AI class.
             ; Holds '((open_list) (closed_list)) which
             ; is returned by some functions
             both
-            succ_lst    ; List of successor nodes
+            succ_list    ; List of successor nodes
             return_list    ; List that is returned by this function
         )
 
@@ -174,6 +174,63 @@ Written Spring 2016 for CSC447/547 AI class.
     )
 )
 
+#|
+
+; Iterative version of the a*, only returns if a solution was found.
+( defun A*_search ( open_list closed_list goal? successors heuristic )
+    ( let
+        (
+            ; Gets the best node in the Open List
+            ( best ( find_best open_list ) )
+            ; Holds '((open_list) (closed_list)) which
+            ; is returned by some functions
+            both
+            succ_lst    ; List of successor nodes
+            return_list    ; List that is returned by this function
+        )
+        
+        ( do ()
+            ( ( funcall goal? ( caddr best ) ) NIL )
+            
+            ; Moves best to Closed List
+            ( setf both
+			    ( mov_elem_between_lsts best open_list closed_list )
+			)
+            ( setf open_list ( car both ) )
+            ( setf closed_list ( cadr both ) )
+
+            ; Generates list of successors
+            ( setf succ_list
+                ( map
+                    'list
+                    #'( lambda ( state )
+                        ( make_node state best heuristic )
+                    )
+                    ( funcall successors ( caddr best ) )
+                )
+            )
+            
+            ; Update number of nodes expanded
+            ( setf *expanded* ( + *expanded* 1 ) )
+            
+            ; Update number of nodes generated
+            ( setf *generated* ( + *generated* ( length succ_list ) ) )
+
+            ; Processes successors
+            ( setf both ( process_succs succ_list open_list closed_list ) )
+            ( setf open_list ( car both ) )
+            ( setf closed_list ( cadr both ) )
+            
+            ( setf best ( find_best open_list ) )
+        )
+        
+        ( format t "Solution Found" )
+        NIL
+    )
+)
+
+|#
+
 #|--------------------------------------------------------------------------|#
 #|                             Other Functions                              |#
 #|--------------------------------------------------------------------------|#
@@ -200,6 +257,8 @@ Written Spring 2016 for CSC447/547 AI class.
     ( list ( 1+ ( car parent ) ) ( funcall heuristic state ) state ( caddr parent ) )
 )
 
+#|
+
 ; Recursively searches the open_list for the node with the smallest f value.
 ( defun find_best ( open_list &optional ( best () ) )
     ;( format t "Recursive Call" )
@@ -223,7 +282,7 @@ Written Spring 2016 for CSC447/547 AI class.
     )
 )
 
-#|
+|#
 
 ( defun find_best ( open_list )
     ;( format t "Loop Call" )
@@ -239,8 +298,6 @@ Written Spring 2016 for CSC447/547 AI class.
         )
     )
 )
-
-|#
 
 ; Calculates a node's f' value as g + h'.
 ; Small function, but helps to reduce clutter.

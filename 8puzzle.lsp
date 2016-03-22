@@ -132,14 +132,14 @@ Modifications:
 #|--------------------------------------------------------------------------|#
 
 ( defun main ()
-	( cond 
+	#|( cond 
         ;No arguments, so read in the puzzle from CLI
 		( ( not ( = ( length *args* ) 1 ) )
             ( format t "~%Please enter a puzzle:~%>>" )
             ( 8puzzle ( read-puzzle ) )
 		)
 
-	)
+	)|#
 
     ;File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
