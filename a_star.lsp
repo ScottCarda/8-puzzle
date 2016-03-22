@@ -100,7 +100,7 @@ Written Spring 2016 for CSC447/547 AI class.
             ; Holds '((open_list) (closed_list)) which
             ; is returned by some functions
             both
-            succ_lst    ; List of successor nodes
+            succ_list    ; List of successor nodes
             return_list    ; List that is returned by this function
         )
 
@@ -477,4 +477,11 @@ Written Spring 2016 for CSC447/547 AI class.
 ;a list of successor states. This function will dictate how the algorithm will
 ;traverse the state-space. These functions may be specified in a file that is
 ;loaded in under the Files Loaded section.
+
+(defun user-defined-variables (&optional (package :cl-user))
+  (loop with package = (find-package package)
+        for symbol being the symbols of package
+        when (and (eq (symbol-package symbol) package)
+                  (boundp symbol))
+          collect symbol))
 
