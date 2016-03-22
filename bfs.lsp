@@ -43,15 +43,14 @@ Modifications:
     ( setf *expanded*  0 )
 
     ;iterative bfs-search using do*
-    ( bfs-search-do puz_state )
+    ( bfs-search-do puz_state ( generate_goal ( - ( length puz_state ) 1) ) )
 
 )
 
 #|--------------------------------------------------------------------------|#
 #|                              BFS Functions                               |#
 #|--------------------------------------------------------------------------|#
-( defun bfs-search-do ( puz_state )
-    ( setf  g_state ( generate_goal ( - ( length puz_state ) 1) ) )
+( defun bfs-search-do ( puz_state g_state )
     (do*
         (
             (current ( make-node :state puz_state :parent nil ) )
@@ -63,6 +62,9 @@ Modifications:
 
             ( n_value ( - ( length puz_state ) 1) )
             ( node_count 0 )
+            ( temp_node nil )
+            ( goal_node nil )
+            ( state_list nil )
         )
 
         ;DO* exit condition:
@@ -172,7 +174,6 @@ Modifications:
 
         ;the next node to inspect is the parent of the current node
         ( setf current ( node-parent current ) )
-
     )
 )
 
