@@ -17,7 +17,7 @@ Modifications:
 
 ( load 'bfs )
 ( load 'a_star )
-;( load '"DepthFirstID")
+( load 'dfid)
 ( load 'mapper       )
 ( load 'search-funcs )
 ( load 'print_puzzle )
@@ -69,7 +69,9 @@ Modifications:
 
                 ;DFID*
                 ;Add DFID Solution steps here, and then print
-                ;( print_puzzle dfid_answer )
+                ( setf dfid_answer ( dfid  puzzlelist ) )
+                ( print_stats bfs_answer '"DFID" )
+                ( print_puzzle dfid_answer )
 
                 ;A*
                 ( setf a_star_answer ( a* puzzlelist #'goal? #'successors #'heuristic ) )
