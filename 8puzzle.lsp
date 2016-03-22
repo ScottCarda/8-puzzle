@@ -45,7 +45,7 @@ Modifications:
         ;8puzzles
         ( when ( null puzzlelist )
                 ( format t "~%Please enter a puzzle:~%>>" )
-                ( 8puzzle ( read-puzzle ) )
+                ( setf puzzlelist ( read-puzzle ) )
         )
 
         ( setf n ( - ( length puzzlelist ) 1 ) )
