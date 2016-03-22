@@ -31,7 +31,6 @@ Modifications:
         )
         
         ;eventually add stats to the parameter
-        ;(format t "~S graph search~%" algorithm ) 
         (format t "~%~A graph search " search-type ) 
         ( if ( null heuristic ) 
             ;TRUE
@@ -42,9 +41,7 @@ Modifications:
         )
 
         ( format t "---------------------------------------------------------~%" )
-        ;(format t "Solution found in ~S moves~%" moves ) 
         ( format t "Solution found in ~A moves~%" moves ) 
-        ;(format t "~S nodes generated (~S distinct nodes), ~S nodes expanded~%" n_gen n_distinct n_expanded)
         ( format t "~A nodes generated "   *generated* )
         ( format t "(~A distinct nodes), " *distinct* )
         ( format t "~A nodes expanded~%"   *expanded* )
