@@ -16,8 +16,6 @@ Modifications:
 
 ; File that specifies the goal? function and
 ; the successors function required by the algorithm.
-( load 'search-funcs )
-( load 'mapper )
 
 #|--------------------------------------------------------------------------|#
 #|                               Global Vars                                |#
@@ -53,6 +51,7 @@ Modifications:
 #|                              BFS Functions                               |#
 #|--------------------------------------------------------------------------|#
 ( defun bfs-search-do ( puz_state )
+    ( setf  g_state ( generate_goal ( - ( length puz_state ) 1) ) )
     (do*
         (
             (current ( make-node :state puz_state :parent nil ) )
@@ -61,8 +60,8 @@ Modifications:
             ( successor_lst nil )
             ( return_list   nil )
             ( new_node      nil )
-            ( g_state ( generate_goal ( - ( length puz_state ) 1) ) )
 
+            ( n_value ( - ( length puz_state ) 1) )
             ( node_count 0 )
         )
 
@@ -96,7 +95,7 @@ Modifications:
 
         ;we're about to expand another node, so increment counter
         ( incf *expanded* )
-        ( setf successor_lst ( successors (node-state current) ) )
+        ( setf successor_lst ( successors (node-state current)  n_value ) )
 
         ; add successors of current node to OPEN
 

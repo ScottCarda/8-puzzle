@@ -18,52 +18,67 @@ Modifications:
 ( load 'bfs )
 ( load 'a_star )
 ;( load '"DepthFirstID")
-( load 'mapper )
+( load 'mapper       )
 ( load 'search-funcs )
 ( load 'print_puzzle )
+( load 'solvable     )
 
 #|--------------------------------------------------------------------------|#
 #|                             8 Puzzle Routine                             |#
 #|--------------------------------------------------------------------------|#
 
-( defun 8puzzle ( &optional puzzlelist )
-    ( cond
-        
-        ( ( = ( length puzzlelist ) 0 )
-        
-            ; Replace this with the search algorithm to be run
-            ;( printState ( read-puzzle ) )
-            ( print_puzzles ( a* ( read-puzzle ) #'goal? #'successors #'heuristic ) ( - ( length puzzlelist ) 1 ) 4 )
-            
+( defun 8puzzle ( puzzlelist )
+    ( let 
+        ( 
+            ( puzzles_per_row 4 )
+            ( n ( - ( length puzzlelist ) 1 ) )
+            ok
         )
-        
-    		
-        ( t
+    
+
+        ( cond 
+            ;If n > 8 just flag as ok, since
+            ;solvable func doesnt work for non
+            ;8puzzles
+            ( ( > n 8 )
+                ( setf ok t )
+            )
+
+            ;If we're dealing with an 8 puzzle,
+            ;see if it's solvable
+            ( ( solvable puzzlelist )
+                ( setf ok t )
+            )
+
+            ;if it's not... then set the flag
+            ( t
+                ( setf ok nil )
+            )
+        )
+
+    
+        ;If the program has passed "solvable" or 
+        ;if n > 8, then continue with running the program
+        ( cond
+            ( ( not ( null ok ) ) 
+                ;BFS
+                ( setf bfs_answer ( bfs puzzlelist ) )
+                ( print_stats bfs_answer '"BFS" )
+                ( print_puzzle bfs_answer n puzzles_per_row )
 
 
+                ;DFID*
+                ;Add DFID Solution steps here, and then print
+                ;( print_puzzle dfid_answer )
 
-            ;BFS
-            ( setf bfs_answer ( bfs puzzlelist ) )
-            ( print_stats bfs_answer '"BFS" )
-            ( print_puzzle bfs_answer ( - ( length puzzlelist ) 1) 4 )
-
-
-            ;DFID*
-            ;Add DFID Solution steps here, and then print
-            ;( print_puzzle dfid_answer )
-
-            ;A*
-            ( setf a_star_answer ( a* puzzlelist #'goal? #'successors #'heuristic ) )
-            ( print_stats a_star_answer '"A*" '"heuristic-name" )
-            ( print_puzzle a_star_answer ( - ( length puzzlelist ) 1) 4 )
-
-
+                ;A*
+                ( setf a_star_answer ( a* puzzlelist #'goal? #'successors #'heuristic ) )
+                ( print_stats a_star_answer '"A*" '"heuristic-name" )
+                ( print_puzzle a_star_answer n puzzles_per_row )
+            )
 
         )
     )
-	
-	; Suppress NIL
-	( values )
 )
 
 
