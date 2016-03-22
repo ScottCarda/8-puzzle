@@ -185,7 +185,7 @@ Written Spring 2016 for CSC447/547 AI class.
             ; Holds '((open_list) (closed_list)) which
             ; is returned by some functions
             both
-            succ_lst    ; List of successor nodes
+            succ_list    ; List of successor nodes
             return_list    ; List that is returned by this function
         )
         

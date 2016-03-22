@@ -19,14 +19,13 @@ Modifications:
 ( defun successors 
     ( 
       state 
-      &optional ( n_value 8 )        
     )
     ( let (
             ;if 8-puzzle, then n = 8
             ;sqrt(8+1) = 3, so 3x3 puzzle
             ;if 15-puzzle, then n = 15
             ;sqrt(15+1) = 4, so 4x4 puzzle, etc...            
-            ( dimension ( sqrt ( + n_value 1 ) ) )
+            ( dimension ( sqrt ( length state ) ) )
 
             ( location ( position 0 state ) )
             ( succ '() )
@@ -50,7 +49,7 @@ Modifications:
         ;Can only go up if location is less than ( n value + 1 - dimension value)
         ;ex: 8 puzzle  is 3x3, so can only move down if location is <  6 (aka 8+1-3)
         ;ex: 15 puzzle is 4x4, so can only move down if location is < 12 (aka 15+1-4)
-        ( when ( < location ( - ( + n_value 1 ) dimension ) )
+        ( when ( < location ( - ( length state ) dimension ) )
             ( setf DOWN ( copy-list state ) )
 
             ;move tile over a value equal to the dimension
@@ -83,8 +82,8 @@ Modifications:
 ;Determine if you have reached a goal state, perhaps a bit of overkill
 ( defun goal? (
     curr_state 
-    &optional (goal_state '(1 2 3 8 0 4 7 6 5)) 
-              (puzzle_size 9))
+    &optional (goal_state '(1 2 3 8 0 4 7 6 5))
+    )
     ( let ( check_list found_goal )
         ;Check each spot in the list with the goal
         (setf check_list (mapcar #'eq curr_state goal_state))
