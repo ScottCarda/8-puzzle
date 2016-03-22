@@ -176,15 +176,17 @@ Modifications:
     (
         n_value
     )
+    ( let 
+        (
+            ( goal_list  ( make-list ( + 1 n_value ) :initial-element 0 ) )
+        )
 
+        ;use mapper function to generate the goal state
+        ( setf goal_list
+            ( mapper goal_list n_value )
+        )
 
-
-    ( setf goal_list
-        ( make-list ( + 1 n_value ) :initial-element 0 )
+        ;return the goal_list value        
+        goal_list
     )
-    ( setf goal_list
-        ( mapper goal_list n_value )
-    )
-    
-    goal_list
 )

@@ -27,15 +27,35 @@ Modifications:
 #|                             8 Puzzle Routine                             |#
 #|--------------------------------------------------------------------------|#
 
-( defun 8puzzle ( puzzlelist )
+( defun 8puzzle ( &optional ( puzzlelist nil ) )
     ( let 
         ( 
             ( puzzles_per_row 4 )
+<<<<<<< HEAD
             ( n ( - ( length puzzlelist ) 1 ) )
             ( goal NIL )
+=======
+            ( n nil )
+>>>>>>> 06e2f838452f55095a11613e9e540ac5c5d89bbd
             ok
+
+            bfs_answer
+            dfid_answer
+            a_star_answer
         )
     
+
+        ( cond 
+            ;If n > 8 just flag as ok, since
+            ;solvable func doesnt work for non
+            ;8puzzles
+            ( ( null puzzlelist )
+                ( format t "~%Please enter a puzzle:~%>>" )
+                ( 8puzzle ( read-puzzle ) )
+            )
+        )
+
+        ( setf n ( - ( length puzzlelist ) 1 ) )
 
         ( cond 
             ;If n > 8 just flag as ok, since
@@ -71,7 +91,7 @@ Modifications:
                 ;DFID*
                 ;Add DFID Solution steps here, and then print
                 ( setf dfid_answer ( dfid  puzzlelist ) )
-                ( print_stats bfs_answer '"DFID" )
+                ( print_stats dfid_answer '"DFID" )
                 ( print_puzzle dfid_answer n puzzles_per_row )
 
                 ;A*
@@ -82,7 +102,6 @@ Modifications:
                 ( print_stats a_star_answer '"A*" '"heuristic-name" )
                 ( print_puzzle a_star_answer n puzzles_per_row )
             )
-
         )
     )
 )
@@ -133,15 +152,6 @@ Modifications:
 #|--------------------------------------------------------------------------|#
 
 ( defun main ()
-	#|( cond 
-        ;No arguments, so read in the puzzle from CLI
-		( ( not ( = ( length *args* ) 1 ) )
-            ( format t "~%Please enter a puzzle:~%>>" )
-            ( 8puzzle ( read-puzzle ) )
-		)
-
-	)|#
-
     ;File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )

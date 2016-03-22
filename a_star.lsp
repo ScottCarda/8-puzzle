@@ -484,4 +484,3 @@ Written Spring 2016 for CSC447/547 AI class.
         when (and (eq (symbol-package symbol) package)
                   (boundp symbol))
           collect symbol))
-
