@@ -97,7 +97,7 @@ Modifications:
 
         ;we're about to expand another node, so increment counter
         ( incf *expanded* )
-        ( setf successor_lst ( successors (node-state current)  n_value ) )
+        ( setf successor_lst ( successors (node-state current) ) )
 
         ; add successors of current node to OPEN
 

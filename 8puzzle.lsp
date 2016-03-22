@@ -86,7 +86,7 @@ Modifications:
 
                 ;DFID*
                 ;Add DFID Solution steps here, and then print
-                ( setf dfid_answer ( dfid  puzzlelist ) )
+                ( setf dfid_answer ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
                 ( print_stats dfid_answer '"DFID" )
                 ( print_puzzle dfid_answer n puzzles_per_row )
 
