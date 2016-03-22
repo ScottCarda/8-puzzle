@@ -31,12 +31,8 @@ Modifications:
     ( let 
         ( 
             ( puzzles_per_row 4 )
-<<<<<<< HEAD
-            ( n ( - ( length puzzlelist ) 1 ) )
             ( goal NIL )
-=======
             ( n nil )
->>>>>>> 06e2f838452f55095a11613e9e540ac5c5d89bbd
             ok
 
             bfs_answer
