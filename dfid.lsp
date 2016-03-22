@@ -44,7 +44,7 @@ Written Spring 2016 for CSC447/547 AI class.
 						;counts each child generated
 						( incf *generated* )
 						;actual recursive call, storing the return value
-						( setf goalFound ( deepSearch succ maxDepth ( 1+ currentDepth ) ) )
+						( setf goalFound ( deepSearch succ maxDepth ( 1+ currentDepth ) n_value ) )
 					)
 				)
 				;This builds the path as we recurse out if the goal is found
