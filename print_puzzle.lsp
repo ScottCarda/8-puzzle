@@ -22,6 +22,8 @@ Modifications:
 ( defun print_stats 
     (
         puzzle
+        search-type
+        &optional ( heuristic nil )
     )
     ( let 
         (
@@ -30,13 +32,13 @@ Modifications:
         
         ;eventually add stats to the parameter
         ;(format t "~S graph search~%" algorithm ) 
-        (format t "~%~A graph search " *search-type* ) 
-        ( if ( null *heuristic* ) 
+        (format t "~%~A graph search " search-type ) 
+        ( if ( null heuristic ) 
             ;TRUE
             ( format t "~%" )
             
             ;FALSE
-            ( format t "( heuristic: ~A )~%" *heuristic* )
+            ( format t "( heuristic: ~A )~%" heuristic )
         )
 
         ( format t "---------------------------------------------------------~%" )
@@ -87,15 +89,8 @@ Modifications:
         ( setf puz_height puz_width )
         ( setf per_row puz_height   )
 
-        ;print out statistics of the algorithm
-        ;will later have to modify this to handle
-        ;inputting the actual stats, currently does
-        ;nothing!
-        ( print_stats all_puzzles ) 
-        
-        
-        ;just to make super sure, let's reset the global vars here
 
+  
 
         ;col monitors the column total, so there are
         ;<col> states per row.

@@ -16,8 +16,6 @@ Modifications:
 
 ; File that specifies the goal? function and
 ; the successors function required by the algorithm.
-( load 'search-funcs )
-( load 'mapper )
 
 #|--------------------------------------------------------------------------|#
 #|                               Global Vars                                |#
@@ -26,8 +24,6 @@ Modifications:
 ( defparameter *generated* 0 )
 ( defparameter *distinct*  1 )
 ( defparameter *expanded*  0 )
-( defparameter *heuristic*  nil )
-( defparameter *search-type*  "BFS" )
 
 #|--------------------------------------------------------------------------|#
 #|                                Structs                                   |#
@@ -45,8 +41,6 @@ Modifications:
     ( setf *generated* 0 )
     ( setf *distinct*  1 )
     ( setf *expanded*  0 )
-    ( setf *heuristic*  nil )
-    ( setf *search-type*  "BFS" )
 
     ;iterative bfs-search using do*
     ( bfs-search-do puz_state )
@@ -57,6 +51,7 @@ Modifications:
 #|                              BFS Functions                               |#
 #|--------------------------------------------------------------------------|#
 ( defun bfs-search-do ( puz_state )
+    ( setf  g_state ( generate_goal ( - ( length puz_state ) 1) ) )
     (do*
         (
             (current ( make-node :state puz_state :parent nil ) )
@@ -65,8 +60,8 @@ Modifications:
             ( successor_lst nil )
             ( return_list   nil )
             ( new_node      nil )
-            ( g_state ( generate_goal ( - ( length puz_state ) 1) ) )
 
+            ( n_value ( - ( length puz_state ) 1) )
             ( node_count 0 )
         )
 
@@ -100,7 +95,7 @@ Modifications:
 
         ;we're about to expand another node, so increment counter
         ( incf *expanded* )
-        ( setf successor_lst ( successors (node-state current) ) )
+        ( setf successor_lst ( successors (node-state current)  n_value ) )
 
         ; add successors of current node to OPEN
 
