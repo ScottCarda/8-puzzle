@@ -32,6 +32,7 @@ Modifications:
         ( 
             ( puzzles_per_row 4 )
             ( n ( - ( length puzzlelist ) 1 ) )
+            ( goal NIL )
             ok
         )
     
@@ -71,10 +72,13 @@ Modifications:
                 ;Add DFID Solution steps here, and then print
                 ( setf dfid_answer ( dfid  puzzlelist ) )
                 ( print_stats bfs_answer '"DFID" )
-                ( print_puzzle dfid_answer )
+                ( print_puzzle dfid_answer n puzzles_per_row )
 
                 ;A*
-                ( setf a_star_answer ( a* puzzlelist #'goal? #'successors #'heuristic ) )
+                ( setf a_star_answer ( a* puzzlelist
+                    #'( lambda ( state ) ( goal? state goal ) )
+                    #'successors
+                    #'heuristic ) )
                 ( print_stats a_star_answer '"A*" '"heuristic-name" )
                 ( print_puzzle a_star_answer n puzzles_per_row )
             )
