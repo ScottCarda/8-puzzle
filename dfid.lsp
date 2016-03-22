@@ -2,7 +2,7 @@
                     ***** DFID.LSP *****
 
 Routine which performs a depth first iterated deepening
-search on the state space for the 8 puzzle to fin an optimal 
+search on the state space for the n puzzle to find an optimal 
 solution.
 
 Author: Leif Torgersen
@@ -15,21 +15,18 @@ Written Spring 2016 for CSC447/547 AI class.
 ( defparameter *expanded* 0 )
 
 #|--------------------------------------------------------------------------|#
-#|                               Files Loaded                               |#
-#|--------------------------------------------------------------------------|#
-
-;This file contails the goal? function used in this file
-( load 'search-funcs )
-
-#|--------------------------------------------------------------------------|#
 #|                       Recursive DFS with make depth                      |#
 #|--------------------------------------------------------------------------|#
 
-( defun deepSearch ( currentState maxDepth currentDepth )
-	( let ( goalFound )
+( defun deepSearch ( currentState maxDepth currentDepth n_value 8  )
+	( let ( goalFound goalState )
+		;this sets the goal if not 8 puzzle
+		( when ( not ( = n_value 8 ) )
+			( setf goalState ( generate_goal n_value ) )
+		)
 		( cond
 			;first basis case if the goal is found
-			( ( goal? currentState )
+			( ( or ( goal? currentState ) ( equal currentState goalState ) )
 				( list currentState )
 			)
 			;second basis case if we are as deep as we are 
@@ -64,7 +61,7 @@ Written Spring 2016 for CSC447/547 AI class.
 #|                    Iteration for iterated deepening                      |#
 #|--------------------------------------------------------------------------|#
 
-( defun dfid ( startState )
+( defun dfid ( startState &optional ( n_value 8 ) )
 	( let ( ( searchDepth 0 ) pathReturn )
 		;initializes globals for this function
 		( setf *generated* 0 )
@@ -73,14 +70,10 @@ Written Spring 2016 for CSC447/547 AI class.
 		;while loop which continues to increase depth and call dfid
 		;if the goal is not yet found
 		( loop while ( not pathReturn ) do
-			( setf pathReturn ( deepSearch startState searchDepth 0 ) )
+			( setf pathReturn ( deepSearch startState searchDepth 0  n_value ) )
 			( incf searchDepth )
 		)
-		;( format t "~a" *generated* )
-		;( format t "~a" " " )
-		;( format t "~a" *distinct* )
-		;( format t "~a" " " )
-		;( format t "~a" *expanded* )
+
 		pathReturn
 	)
 )
