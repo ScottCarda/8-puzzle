@@ -27,11 +27,11 @@ Modifications:
 #|                             8 Puzzle Routine                             |#
 #|--------------------------------------------------------------------------|#
 
-( defun 8puzzle ( puzzlelist )
+( defun 8puzzle ( &optional ( puzzlelist nil ) )
     ( let 
         ( 
             ( puzzles_per_row 4 )
-            ( n ( - ( length puzzlelist ) 1 ) )
+            ( n nil )
             ok
 
             bfs_answer
@@ -39,6 +39,18 @@ Modifications:
             a_star_answer
         )
     
+
+        ( cond 
+            ;If n > 8 just flag as ok, since
+            ;solvable func doesnt work for non
+            ;8puzzles
+            ( ( null puzzlelist )
+                ( format t "~%Please enter a puzzle:~%>>" )
+                ( 8puzzle ( read-puzzle ) )
+            )
+        )
+
+        ( setf n ( - ( length puzzlelist ) 1 ) )
 
         ( cond 
             ;If n > 8 just flag as ok, since
@@ -132,15 +144,6 @@ Modifications:
 #|--------------------------------------------------------------------------|#
 
 ( defun main ()
-	#|( cond 
-        ;No arguments, so read in the puzzle from CLI
-		( ( not ( = ( length *args* ) 1 ) )
-            ( format t "~%Please enter a puzzle:~%>>" )
-            ( 8puzzle ( read-puzzle ) )
-		)
-
-	)|#
-
     ;File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
