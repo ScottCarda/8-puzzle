@@ -96,26 +96,34 @@ Modifications:
     )
 )
 
-( defun generate-goal ( n )
-	( let ( ( lst NIL ) )
-		( do ( ( i 1 ( 1+ i ) ) )
-			(( > i n ))
-			( setf lst ( cons i lst ) )
-		)
-		( setf lst ( cons 0 lst ) )
-		( spiral-to-rows ( reverse lst ) )
-	)
+; Generates a goal state for an n-puzzle given the value of n.
+( defun generate-goal ( puzzle-size )
+    ( let
+        (
+            ( lst NIL )    ; puzzle expressed in spiral (clock-wise) order
+        )
+
+        ; Creates list whose values range from 1 to puzzle-size in order
+        ( do ( ( i 1 ( 1+ i ) ) )
+            ( ( > i puzzle-size ) )
+            ( setf lst ( cons i lst ) )
+        )
+        ; Adds 0 to end of the list
+        ( setf lst ( cons 0 lst ) )
+
+        ; Changes lst from spiral order to row-major order
+        ( spiral-to-rows ( reverse lst ) )
+    )
 )
 
-
 ; Takes a puzzle expressed in row-major order and returns the same puzzle
-; expressed in spiral (clock-wise) order
+; expressed in spiral (clock-wise) order.
 ( defun rows-to-spiral ( lst )
     ( let
         (
+            ( temp-lst ( copy-list lst ) )  ; Local copy of lst
             ( N ( isqrt ( length lst ) ) ) ; Length of a side of the puzzle
             ( spiral NIL )  ; The puzzle listed in spiral format
-            ( temp-lst ( copy-list lst ) )  ; Local copy of lst
         )
         
         ( cond
@@ -153,36 +161,53 @@ Modifications:
     )
 )
 
+; Takes a puzzle expressed in spiral (clock-wise) order and
+; returns the same puzzle expressed in row-major order.
 ( defun spiral-to-rows ( lst )
-	( let   (
-			( temp-lst ( copy-list lst ) ) ; Local copy of lst
-			( rows NIL )
-			( transfer NIL )
-		)
+    ;( let
+    ;    (
+    ;        ( temp-lst ( copy-list lst ) ) ; Local copy of lst
+    ;        ( rows NIL ) ; The puzzle listed in row-major order
+    ;        ( transfer NIL ) ; An intermediary list
+    ;    )
 
-		( do ( ( i 1 ( 1+ i ) ) )
-			( ( not temp-lst ) rows )
+        ( do
+            (
+                ( i 1 ( 1+ i ) ) ; Side length of the puzzle built in each iteration
 
-			; Grabs the last ith odd number of elements from temp-lst
-			( setf transfer ( last temp-lst ( - ( * 2 i ) 1 ) ) )
-			( setf temp-lst ( nbutlast temp-lst ( - ( * 2 i ) 1 ) ) )
+                ( temp-lst ( copy-list lst ) ) ; Local copy of lst
+                ( rows NIL ) ; The puzzle listed in row-major order
+                ( transfer NIL ) ; An intermediary list
+                ( odd ) ; The ith odd number
+            )
+            ( ( not temp-lst ) rows ) ; Stops when whole list is processed
 
-			; Reverse rows
-			( setf rows ( reverse rows ) )
-			
-			; The first i elements from transfer are the top row
-			( setf rows ( nconc ( subseq transfer 0 i ) rows ) )
-			( setf transfer ( subseq transfer i ) )
+            ; Calculates odd
+            ( setf odd ( - ( * 2 i ) 1 ) )
 
-			; Rest of transfer is right-most column
-			( do ( ( j ( - ( * 2 i ) 1 ) ( + i j ) ) )
-				( ( not transfer ) )
-				( push ( pop transfer ) ( cdr ( nthcdr ( - j 1 ) rows ) ) )
-			)
+            ; Grabs the last ith odd number of elements from temp-lst
+            ( setf transfer ( last temp-lst odd ) )
+            ( setf temp-lst ( nbutlast temp-lst odd ) )
 
-		)	
+            ; Reverses the puzzle, rather than special-casing
+            ; the bottom row and left-most column
+            ( setf rows ( reverse rows ) )
+            
+            ; The first i elements from transfer are the top row
+            ( setf rows ( nconc ( subseq transfer 0 i ) rows ) )
+            ( setf transfer ( subseq transfer i ) )
 
-	)
+            ; Rest of transfer is right-most column
+            ( do ( ( j odd ( + i j ) ) )
+                ( ( not transfer ) )
+                ; A reported bug in Lisp prevents us from pushing onto an nthCDR
+                ; so we use CDR of nthCDR and subtract 1 from j
+                ( push ( pop transfer ) ( cdr ( nthcdr ( - j 1 ) rows ) ) )
+            )
+
+        )    
+
+    ;)
 )
 
 #|--------------------------------------------------------------------------|#
@@ -197,17 +222,17 @@ Modifications:
 )
 
 #|( defun count_wrong ( state goal )
-	( cond
-		( ( or ( not state ) ( not goal ) ) 0 )
+    ( cond
+        ( ( or ( not state ) ( not goal ) ) 0 )
 
-		( ( = ( car state ) ( car goal ) )
-			( count_wrong ( cdr state ) ( cdr goal ) )
-		)
+        ( ( = ( car state ) ( car goal ) )
+            ( count_wrong ( cdr state ) ( cdr goal ) )
+        )
 
-		( t
-			( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
-		)
-	)
+        ( t
+            ( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
+        )
+    )
 )|#
 
 ( defun count_wrong ( state goal )
@@ -333,40 +358,47 @@ Modifications:
 
 ( load 'mapper )
 
-( defun generate-goal ( n )
-	( let ( ( lst NIL ) )
-		( do ( ( i 1 ( 1+ i ) ) )
-			(( > i n ))
-			( setf lst ( cons i lst ) )
-		)
-		( setf lst ( cons 0 lst ) )
-		( spiral-to-rows ( reverse lst ) )
-	)
-)
+#|; Generates a goal state for an n-puzzle given the value of n.
+( defun generate-goal ( puzzle-size )
+    ( let
+        (
+            ( lst NIL )    ; puzzle expressed in spiral (clock-wise) order
+        )
+
+        ; Creates list whose values range from 1 to puzzle-size in order
+        ( do ( ( i 1 ( 1+ i ) ) )
+            ( ( > i puzzle-size ) )
+            ( setf lst ( cons i lst ) )
+        )
+        ; Adds 0 to end of the list
+        ( setf lst ( cons 0 lst ) )
+
+        ; Changes lst from spiral order to row-major order
+        ( spiral-to-rows ( reverse lst ) )
+    )
+)|#
 
 ( defun compair_test ( n )
 
-	; n = 115599 is a good test that shows the difference in speed
-	( let ( lst1 lst2 lst3 cmp-str )
-		( format t "mapper: " )
-		( setf lst1 ( generate_goal n ) )
-		( format t "~A~%" lst1 )
+    ; n = 115599 is a good test that shows the difference in speed
+    ( let ( lst1 lst2 lst3 cmp-str )
+        ( format t "mapper: " )
+        ( setf lst1 ( generate_goal n ) )
+        ( format t "~A~%" lst1 )
 
-		( format t "spiral: " )
-		( setf lst2 ( generate-goal n ) )
-		( format t "~A~%" lst2 )
-	
-		( format t "mapper: " )
-		( setf lst3 ( generate_goal n ) )
-		( format t "~A~%" lst3 )
+        ( format t "spiral: " )
+        ( setf lst2 ( generate-goal n ) )
+        ( format t "~A~%" lst2 )
+    
+        ( format t "mapper: " )
+        ( setf lst3 ( generate_goal n ) )
+        ( format t "~A~%" lst3 )
 
-		( if ( equal lst1 lst2 )
-			( setf cmp-str "" )
-			( setf cmp-str "not " )
-		)
-		( format t "The lists are ~Athe same.~%" cmp-str )
-	)
+        ( if ( equal lst1 lst2 )
+            ( setf cmp-str "" )
+            ( setf cmp-str "not " )
+        )
+        ( format t "The lists are ~Athe same.~%" cmp-str )
+    )
 
 )
-
-
