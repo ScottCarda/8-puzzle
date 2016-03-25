@@ -96,11 +96,24 @@ Modifications:
     )
 )
 
+( defun generate-goal ( n )
+	( let ( ( lst NIL ) )
+		( do ( ( i 1 ( 1+ i ) ) )
+			(( > i n ))
+			( setf lst ( cons i lst ) )
+		)
+		( setf lst ( cons 0 lst ) )
+		( spiral-to-rows ( reverse lst ) )
+	)
+)
+
+
 ; Takes a puzzle expressed in row-major order and returns the same puzzle
 ; expressed in spiral (clock-wise) order
-( defun rows-to-spiral ( lst N )
+( defun rows-to-spiral ( lst )
     ( let
         (
+            ( N ( isqrt ( length lst ) ) ) ; Length of a side of the puzzle
             ( spiral NIL )  ; The puzzle listed in spiral format
             ( temp-lst ( copy-list lst ) )  ; Local copy of lst
         )
@@ -115,7 +128,7 @@ Modifications:
                 ( do ( ( i 0 ( 1+ i ) ) )
                     ( ( >= i ( - N 1 ) ) )
                     ; Puts top row into spiral
-                    ( setf spiral ( append spiral ( list ( nth i temp-lst ) ) ) )
+                    ( setf spiral ( nconc spiral ( list ( nth i temp-lst ) ) ) )
                     ; Sets up top row for removal
                     ( setf ( nth i temp-lst ) -1 )
                 )
@@ -124,7 +137,7 @@ Modifications:
                 ( do ( ( i ( - N 1 ) ( setf i ( + N i ) ) ) )
                     ( ( > i ( - ( * N N ) 1 ) ) )
                     ; Puts right-most column into spiral
-                    ( setf spiral ( append spiral ( list ( nth i lst ) ) ) )
+                    ( setf spiral ( nconc spiral ( list ( nth i lst ) ) ) )
                     ; Sets up right-most column for removal
                     ( setf ( nth i temp-lst ) -1 )
                 )
@@ -134,10 +147,42 @@ Modifications:
                 ( setf temp-lst ( reverse ( remove -1 temp-lst ) ) )
 
                 ; Recurses with N-1 by N-1 puzzle
-                ( append spiral ( rows-to-spiral temp-lst ( - N 1 ) ) )
+                ( nconc spiral ( rows-to-spiral temp-lst ) )
             )
         )        
     )
+)
+
+( defun spiral-to-rows ( lst )
+	( let   (
+			( temp-lst ( copy-list lst ) ) ; Local copy of lst
+			( rows NIL )
+			( transfer NIL )
+		)
+
+		( do ( ( i 1 ( 1+ i ) ) )
+			( ( not temp-lst ) rows )
+
+			; Grabs the last ith odd number of elements from temp-lst
+			( setf transfer ( last temp-lst ( - ( * 2 i ) 1 ) ) )
+			( setf temp-lst ( nbutlast temp-lst ( - ( * 2 i ) 1 ) ) )
+
+			; Reverse rows
+			( setf rows ( reverse rows ) )
+			
+			; The first i elements from transfer are the top row
+			( setf rows ( nconc ( subseq transfer 0 i ) rows ) )
+			( setf transfer ( subseq transfer i ) )
+
+			; Rest of transfer is right-most column
+			( do ( ( j ( - ( * 2 i ) 1 ) ( + i j ) ) )
+				( ( not transfer ) )
+				( push ( pop transfer ) ( cdr ( nthcdr ( - j 1 ) rows ) ) )
+			)
+
+		)	
+
+	)
 )
 
 #|--------------------------------------------------------------------------|#
@@ -285,3 +330,43 @@ Modifications:
  | admis: number of values out of place ( minus one )
  | inadmis: comparing sums of rows and columns
  |#
+
+( load 'mapper )
+
+( defun generate-goal ( n )
+	( let ( ( lst NIL ) )
+		( do ( ( i 1 ( 1+ i ) ) )
+			(( > i n ))
+			( setf lst ( cons i lst ) )
+		)
+		( setf lst ( cons 0 lst ) )
+		( spiral-to-rows ( reverse lst ) )
+	)
+)
+
+( defun compair_test ( n )
+
+	; n = 115599 is a good test that shows the difference in speed
+	( let ( lst1 lst2 lst3 cmp-str )
+		( format t "mapper: " )
+		( setf lst1 ( generate_goal n ) )
+		( format t "~A~%" lst1 )
+
+		( format t "spiral: " )
+		( setf lst2 ( generate-goal n ) )
+		( format t "~A~%" lst2 )
+	
+		( format t "mapper: " )
+		( setf lst3 ( generate_goal n ) )
+		( format t "~A~%" lst3 )
+
+		( if ( equal lst1 lst2 )
+			( setf cmp-str "" )
+			( setf cmp-str "not " )
+		)
+		( format t "The lists are ~Athe same.~%" cmp-str )
+	)
+
+)
+
+
