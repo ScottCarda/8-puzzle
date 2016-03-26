@@ -60,7 +60,7 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Performs the A* algorithm given a starting state, goal predicate function,
 ; successor generation function, and a static evaluation heuristic function.
 ( defun A* ( state goal? successors heuristic )
-
+    "Performs a state-space search using the A* algorithm."
     ; Reset global counters
     ( setf *generated* 0 )
     ( setf *distinct* 1 )
@@ -84,6 +84,7 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Recursively searches the state-space by picking the 'best' unexpanded
 ; node so far and expanding it, until the goal state is found.
 ( defun A*_search ( open_list closed_list goal? successors heuristic )
+    "Recursively searches the state-space with the A* algorithm."
     ( let
         (
             ; Gets the best node in the Open List
@@ -172,6 +173,7 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Finds and returns the node in node_list with the given state.
 ; Returns NIL if not found.
 ( defun get_node_with_state ( state node_list )
+    "Returns a node with a given state from the given list of nodes."
     ( car ( member
         state
         node_list
@@ -188,11 +190,13 @@ Written Spring 2016 for CSC447/547 AI class.
 ;        state - the state that the node holds in the state-space
 ;        parent-state - the state that the node's parent holds
 ( defun make_node ( state parent heuristic )
+    "Creates a node."
     ( list ( 1+ ( car parent ) ) ( funcall heuristic state ) state ( caddr parent ) )
 )
 
-; Recursively searches the open_list for the node with the smallest f value.
+; Recursively searches the open_list for the node with the smallest f' value.
 ( defun find_best ( open_list &optional ( best () ) )
+    "Returns the node from the given list with the smallest f' value."
     ( cond
 
         ; If the open_list is empty ( base case ): Returns best
@@ -216,12 +220,14 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Calculates a node's f' value as g + h'.
 ; Small function, but helps to reduce clutter.
 ( defun eval_node ( node )
+    "Gets a node's f' value"
     ( + ( car node ) ( cadr node ) )
 )
 
 ; Moves elem from a_list to b_list. Returns the updated lists
 ; in the following format: ( (a_list) (b_list) ).
 ( defun mov_elem_between_lsts ( elem a_list b_list )
+    "Removes element from first list and adds it to the second list."
     ( let ( both )
         ; If elem is found in a_list:
         ( when ( member elem a_list :test #'equal )
@@ -241,6 +247,7 @@ Written Spring 2016 for CSC447/547 AI class.
 ; same state. Returns the updated Open List and Closed List in the
 ; following format: ( (open_list) (closed_list) )
 ( defun process_succs ( succ_list open_list closed_list )
+    "Conditionally puts all nodes of successor list into Open List."
     ( let
         (
             ; The Successor node being processed

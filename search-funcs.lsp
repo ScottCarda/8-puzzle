@@ -378,7 +378,7 @@ Modifications:
     )
 )|#
 
-( defun compair_test ( n )
+( defun compare_test ( n )
 
     ; n = 115599 is a good test that shows the difference in speed
     ( let ( lst1 lst2 lst3 cmp-str )

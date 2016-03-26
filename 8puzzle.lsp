@@ -28,6 +28,7 @@ Modifications:
 #|--------------------------------------------------------------------------|#
 
 ( defun 8puzzle ( &optional ( puzzlelist nil ) )
+    "This is a docstring."
     ( let 
         ( 
             ( puzzles_per_row 4 )
@@ -114,6 +115,7 @@ Modifications:
 
 ; Gets a puzzle from user input.
 ( defun read-puzzle ()
+    "Gets a puzzle from user input."
     ( let
 		(
 			; The user input as a string
@@ -132,6 +134,7 @@ Modifications:
 
 ; Reads a puzzle in from a file.
 ( defun read-puzzle-file ( filename )
+    "Reads a puzzle from a file."
     ( let
 		(
 			( file ( open filename ) ) ; The file stream
@@ -151,6 +154,7 @@ Modifications:
 
 ; Recursively reads a puzzle from an input stream.
 ( defun get-puzzle ( file )
+    "Reads a puzzle from an input stream."
     ( let
 		(
 			; Reads the next input from the file
