@@ -98,6 +98,7 @@ Modifications:
 
 ; Generates a goal state for an n-puzzle given the value of n.
 ( defun generate-goal ( puzzle-size )
+    "Generates a goal state for an n-puzzle given the value of n."
     ( let
         (
             ( lst NIL )    ; puzzle expressed in spiral (clock-wise) order
@@ -119,6 +120,7 @@ Modifications:
 ; Takes a puzzle expressed in row-major order and returns the same puzzle
 ; expressed in spiral (clock-wise) order.
 ( defun rows-to-spiral ( lst )
+    "Converts puzzle from row-major order to spiral order."
     ( let
         (
             ( temp-lst ( copy-list lst ) )  ; Local copy of lst
@@ -164,6 +166,7 @@ Modifications:
 ; Takes a puzzle expressed in spiral (clock-wise) order and
 ; returns the same puzzle expressed in row-major order.
 ( defun spiral-to-rows ( lst )
+    "Converts puzzle from spiral order to row-major order."
     ;( let
     ;    (
     ;        ( temp-lst ( copy-list lst ) ) ; Local copy of lst
@@ -338,11 +341,8 @@ Modifications:
                         ( setf count ( + count
                             ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
                         ) )
-                        
-                        ;( format t "Position ~D: ~A was changed to " i lst )
+                       
                         ( rotatef ( nth i lst ) ( nth correct-pos lst ) )
-                        ;( format t "~A" lst )
-                        
                     )
                 )
             )
