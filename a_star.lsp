@@ -53,15 +53,6 @@ Written Spring 2016 for CSC447/547 AI class.
 ; generating successors by the A* algorithm
 ( defparameter *expanded* 0 )
 
-
-#|--------------------------------------------------------------------------|#
-#|                               Files Loaded                               |#
-#|--------------------------------------------------------------------------|#
-
-; File that specifies the goal? function and
-; the successors function required by the algorithm.
-;( load 'search-funcs )
-
 #|--------------------------------------------------------------------------|#
 #|                               A* Functions                               |#
 #|--------------------------------------------------------------------------|#
@@ -117,8 +108,8 @@ Written Spring 2016 for CSC447/547 AI class.
             ( t
                 ; Moves best to Closed List
                 ( setf both
-				    ( mov_elem_between_lsts best open_list closed_list )
-				)
+                    ( mov_elem_between_lsts best open_list closed_list )
+                )
                 ( setf open_list ( car both ) )
                 ( setf closed_list ( cadr both ) )
 
@@ -174,63 +165,6 @@ Written Spring 2016 for CSC447/547 AI class.
     )
 )
 
-#|
-
-; Iterative version of the a*, only returns if a solution was found.
-( defun A*_search ( open_list closed_list goal? successors heuristic )
-    ( let
-        (
-            ; Gets the best node in the Open List
-            ( best ( find_best open_list ) )
-            ; Holds '((open_list) (closed_list)) which
-            ; is returned by some functions
-            both
-            succ_list    ; List of successor nodes
-            return_list    ; List that is returned by this function
-        )
-        
-        ( do ()
-            ( ( funcall goal? ( caddr best ) ) NIL )
-            
-            ; Moves best to Closed List
-            ( setf both
-			    ( mov_elem_between_lsts best open_list closed_list )
-			)
-            ( setf open_list ( car both ) )
-            ( setf closed_list ( cadr both ) )
-
-            ; Generates list of successors
-            ( setf succ_list
-                ( map
-                    'list
-                    #'( lambda ( state )
-                        ( make_node state best heuristic )
-                    )
-                    ( funcall successors ( caddr best ) )
-                )
-            )
-            
-            ; Update number of nodes expanded
-            ( setf *expanded* ( + *expanded* 1 ) )
-            
-            ; Update number of nodes generated
-            ( setf *generated* ( + *generated* ( length succ_list ) ) )
-
-            ; Processes successors
-            ( setf both ( process_succs succ_list open_list closed_list ) )
-            ( setf open_list ( car both ) )
-            ( setf closed_list ( cadr both ) )
-            
-            ( setf best ( find_best open_list ) )
-        )
-        
-        ( format t "Solution Found" )
-        NIL
-    )
-)
-
-|#
-
 #|--------------------------------------------------------------------------|#
 #|                             Other Functions                              |#
 #|--------------------------------------------------------------------------|#
@@ -257,11 +191,8 @@ Written Spring 2016 for CSC447/547 AI class.
     ( list ( 1+ ( car parent ) ) ( funcall heuristic state ) state ( caddr parent ) )
 )
 
-#|
-
 ; Recursively searches the open_list for the node with the smallest f value.
 ( defun find_best ( open_list &optional ( best () ) )
-    ;( format t "Recursive Call" )
     ( cond
 
         ; If the open_list is empty ( base case ): Returns best
@@ -279,23 +210,6 @@ Written Spring 2016 for CSC447/547 AI class.
 
         ; Else: Recurses with current best node
         ( t ( find_best ( cdr open_list ) best ) )
-    )
-)
-
-|#
-
-( defun find_best ( open_list )
-    ;( format t "Loop Call" )
-    ( when ( listp open_list )
-        ( let ( ( best ( car open_list ) ) )
-            ( dolist ( i ( cdr open_list ) best )
-                ; If a better node is found:
-                ( when ( < ( eval_node i ) ( eval_node best ) )
-                    ; Update best node
-                    ( setf best i )
-                )
-            )
-        )
     )
 )
 
@@ -319,8 +233,6 @@ Written Spring 2016 for CSC447/547 AI class.
         both
     )
 )
-
-#|
 
 ; Recursively processes successor nodes on succ_list by either
 ; placing the successor on the Open List, placing the successor on
@@ -348,8 +260,8 @@ Written Spring 2016 for CSC447/547 AI class.
 
                     ; If the same state was found on the Closed List:
                     ( ( setf extra
-							( get_node_with_state ( caddr succ ) closed_list )
-						)
+                            ( get_node_with_state ( caddr succ ) closed_list )
+                        )
                         ; If succ is better than extra:
                         ( when ( < ( eval_node succ ) ( eval_node extra ) )
                             ; Removes extra and puts succ on Open List
@@ -360,8 +272,8 @@ Written Spring 2016 for CSC447/547 AI class.
 
                     ; If the same state was found on the Open List:
                     ( ( setf extra
-							( get_node_with_state ( caddr succ ) open_list )
-						)
+                            ( get_node_with_state ( caddr succ ) open_list )
+                        )
                         ; If succ is better than extra:
                         ( when ( < ( eval_node succ ) ( eval_node extra ) )
                             ; Removes extra and puts succ on Open List
@@ -384,54 +296,6 @@ Written Spring 2016 for CSC447/547 AI class.
                 ( process_succs ( cdr succ_list ) open_list closed_list )
             )
         )
-    )
-)
-
-|#
-
-( defun process_succs ( succ_list open_list closed_list )
-    ( let ( extra )
-        ( dolist ( succ succ_list ( list open_list closed_list ) )
-            ( cond
-
-                ; If the same state was found on the Closed List:
-                ( ( setf extra
-					    ( get_node_with_state ( caddr succ ) closed_list )
-				    )
-                    ; If succ is better than extra:
-                    ( when ( < ( eval_node succ ) ( eval_node extra ) )
-                        ; Removes extra and puts succ on Open List
-                        ( setf closed_list ( remove extra closed_list ) )
-                        ( setf open_list ( cons succ open_list ) )
-                    )
-                )
-
-                ; If the same state was found on the Open List:
-                ( ( setf extra
-					    ( get_node_with_state ( caddr succ ) open_list )
-				    )
-                    ; If succ is better than extra:
-                    ( when ( < ( eval_node succ ) ( eval_node extra ) )
-                        ; Removes extra and puts succ on Open List
-                        ( setf open_list ( remove extra open_list ) )
-                        ( setf open_list ( cons succ open_list ) )
-                    )
-                )
-
-                ; If no extras were found:
-                ( t
-                    ; Puts succ on Open List
-                    ( setf open_list ( cons succ open_list ) )
-                    
-                    ; Update number of distinct nodes
-                    ( setf *distinct* ( + *distinct* 1 ) )
-                )
-                
-            )
-        )
-        
-        ; Return updated lists
-        ;( list open_list closed_list )
     )
 )
 
@@ -465,6 +329,126 @@ Written Spring 2016 for CSC447/547 AI class.
 ;( defun test_list ()
 ;    '( ( 1 0 ( 1 2 3 4 5 6 7 8 0 ) ) ( 1 1 ( 0 8 7 6 5 4 3 2 1 ) ) )
 ;)
+
+#|
+; Iterative version of the a*, only returns if a solution was found.
+( defun A*_search ( open_list closed_list goal? successors heuristic )
+    ( let
+        (
+            ; Gets the best node in the Open List
+            ( best ( find_best open_list ) )
+            ; Holds '((open_list) (closed_list)) which
+            ; is returned by some functions
+            both
+            succ_list    ; List of successor nodes
+            return_list    ; List that is returned by this function
+        )
+        
+        ( do ()
+            ( ( funcall goal? ( caddr best ) ) NIL )
+            
+            ; Moves best to Closed List
+            ( setf both
+                ( mov_elem_between_lsts best open_list closed_list )
+            )
+            ( setf open_list ( car both ) )
+            ( setf closed_list ( cadr both ) )
+
+            ; Generates list of successors
+            ( setf succ_list
+                ( map
+                    'list
+                    #'( lambda ( state )
+                        ( make_node state best heuristic )
+                    )
+                    ( funcall successors ( caddr best ) )
+                )
+            )
+            
+            ; Update number of nodes expanded
+            ( setf *expanded* ( + *expanded* 1 ) )
+            
+            ; Update number of nodes generated
+            ( setf *generated* ( + *generated* ( length succ_list ) ) )
+
+            ; Processes successors
+            ( setf both ( process_succs succ_list open_list closed_list ) )
+            ( setf open_list ( car both ) )
+            ( setf closed_list ( cadr both ) )
+            
+            ( setf best ( find_best open_list ) )
+        )
+        
+        ( format t "Solution Found" )
+        NIL
+    )
+)
+|#
+
+#|
+( defun process_succs ( succ_list open_list closed_list )
+    ( let ( extra )
+        ( dolist ( succ succ_list ( list open_list closed_list ) )
+            ( cond
+
+                ; If the same state was found on the Closed List:
+                ( ( setf extra
+                        ( get_node_with_state ( caddr succ ) closed_list )
+                    )
+                    ; If succ is better than extra:
+                    ( when ( < ( eval_node succ ) ( eval_node extra ) )
+                        ; Removes extra and puts succ on Open List
+                        ( setf closed_list ( remove extra closed_list ) )
+                        ( setf open_list ( cons succ open_list ) )
+                    )
+                )
+
+                ; If the same state was found on the Open List:
+                ( ( setf extra
+                        ( get_node_with_state ( caddr succ ) open_list )
+                    )
+                    ; If succ is better than extra:
+                    ( when ( < ( eval_node succ ) ( eval_node extra ) )
+                        ; Removes extra and puts succ on Open List
+                        ( setf open_list ( remove extra open_list ) )
+                        ( setf open_list ( cons succ open_list ) )
+                    )
+                )
+
+                ; If no extras were found:
+                ( t
+                    ; Puts succ on Open List
+                    ( setf open_list ( cons succ open_list ) )
+                    
+                    ; Update number of distinct nodes
+                    ( setf *distinct* ( + *distinct* 1 ) )
+                )
+                
+            )
+        )
+        
+        ; Return updated lists
+        ;( list open_list closed_list )
+    )
+)
+|#
+
+#|
+( defun find_best ( open_list )
+    ;( format t "Loop Call" )
+    ( when ( listp open_list )
+        ( let ( ( best ( car open_list ) ) )
+            ( dolist ( i ( cdr open_list ) best )
+                ; If a better node is found:
+                ( when ( < ( eval_node i ) ( eval_node best ) )
+                    ; Update best node
+                    ( setf best i )
+                )
+            )
+        )
+    )
+)
+|#
 
 ;Because the heuristic function
 ;will usually differ from problem to problem, it has been given its own section
