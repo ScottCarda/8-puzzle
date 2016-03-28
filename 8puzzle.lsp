@@ -79,13 +79,13 @@ Modifications:
             
                 ; BFS
                 ( setf solution ( bfs puzzlelist ) )
-                ( print_stats solution '"BFS" )
+                ( print_stats solution "BFS" )
                 ( print_puzzle solution n puzzles_per_row )
 
                 ; DFID*
                 ; Add DFID Solution steps here, and then print
                 ( setf solution ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
-                ( print_stats solution '"DFID" )
+                ( print_stats solution "DFID" )
                 ( print_puzzle solution n puzzles_per_row )
 
                 ; A* with Hamming ( admissible )
@@ -94,7 +94,7 @@ Modifications:
                     #'successors
                     #'( lambda ( state ) ( count_wrong state goal ) )
                 ) )
-                ( print_stats solution '"A*" '"Count Incorrect Elements ( Admissible )" )
+                ( print_stats solution "A*" "Count Incorrect Elements ( Admissible )" )
                 ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* with Manhattan ( admissible )
@@ -103,7 +103,7 @@ Modifications:
                     #'successors
                     #'( lambda ( state ) ( count_wrong_w_rot state goal ) )
                 ) )
-                ( print_stats solution '"A*" '"Count Manhattan Distance of Incorrect Elements ( Admissible )" )
+                ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements ( Admissible )" )
                 ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* ( inadmissible )
@@ -112,7 +112,7 @@ Modifications:
                     #'successors
                     #'( lambda ( state ) ( count_wrong_w_nilsson_score state goal ) )
                 ) )
-                ( print_stats solution '"A*" '"Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
+                ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
                 ( print_puzzle solution n puzzles_per_row )
             )
             
