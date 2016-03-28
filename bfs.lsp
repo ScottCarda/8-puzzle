@@ -152,12 +152,25 @@ Modifications:
 
         ;DO* exit condition:
         ;do this until we get back to the beginning, where our start state is
-        ( ( null ( node-parent  current ) ) 
+        ;( ( null ( node-parent  current ) ) 
+        ( (or (null current) (null (node-parent current)) )
 
             ;youre at the beginning, but remember to add that one to the list too!
-            ( setf state_list ( append  
-                                ( list ( node-state current ) ) 
-                                state_list ) 
+            ( if (null current) 
+
+                ;TRUE: Don't do anything, this nil check is only to handle
+                ;the rare case that the initial puzzle passed in was the goal state,
+                ;as this causes the node structure to not be built properly.
+                nil             
+
+                ;FALSE: Go one step back and add the beginning of the list to the list 
+                ;of states
+                ( setf state_list 
+                    ( append  
+                        ( list ( node-state current ) ) 
+                        state_list 
+                    ) 
+                ) 
             )
 
             ;This is our answer

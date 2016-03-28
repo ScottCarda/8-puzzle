@@ -76,9 +76,9 @@ Modifications:
         ( cond
             ( ( not ( null ok ) ) 
                 ; BFS
-                ;( setf bfs_answer ( bfs puzzlelist ) )
-                ;( print_stats bfs_answer '"BFS" )
-                ;( print_puzzle bfs_answer n puzzles_per_row )
+                ( setf bfs_answer ( bfs puzzlelist ) )
+                ( print_stats bfs_answer '"BFS" )
+                ( print_puzzle bfs_answer n puzzles_per_row )
 
 
                 ; DFID*
