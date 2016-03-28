@@ -17,8 +17,7 @@ Modifications:
 
 ( load 'bfs )
 ( load 'a_star )
-( load 'dfid)
-;( load 'mapper       )
+( load 'dfid )
 ( load 'search-funcs )
 ( load 'print_puzzle )
 ( load 'solvable     )
@@ -27,23 +26,22 @@ Modifications:
 #|                             8 Puzzle Routine                             |#
 #|--------------------------------------------------------------------------|#
 
+; Solves the passed in n-puzzle with several state-based search
+; algorithms. Prompts the user for a puzzle if none is given.
 ( defun 8puzzle ( &optional ( puzzlelist nil ) )
-    "This is a docstring."
+    "Solves an n-puzzle using several state-space search algorithms."
     ( let 
         ( 
-            ( puzzles_per_row 4 )
-            ( goal nil )
-            ( n nil )
-            ok
-
-            bfs_answer
-            dfid_answer
-            a_star_answer
+            ( puzzles_per_row 4 ) ; Number of puzzles printed in a row to the screen
+            ( goal nil ) ; Goal state for the given puzzle's length
+            ( n nil ) ; One less than the length of the puzzle, the 'n' of n-puzzle
+            ok ; Flag for if the puzzle is solvable
+            solution ; Anser returned by an algorithm
         )
     
-        ;If n > 8 just flag as ok, since
-        ;solvable func doesnt work for non
-        ;8puzzles
+        ; If n > 8 just flag as ok, since
+        ; solvable func doesnt work for non
+        ; 8puzzles
         ( when ( null puzzlelist )
                 ( format t "~%Please enter a puzzle:~%>>" )
                 ( setf puzzlelist ( read-puzzle ) )
@@ -52,73 +50,79 @@ Modifications:
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
         ( cond 
-            ;If n > 8 just flag as ok, since
-            ;solvable func doesnt work for non
-            ;8puzzles
+            ; If n > 8 just flag as ok, since
+            ; solvable func doesnt work for non
+            ; 8puzzles
             ( ( > n 8 )
                 ( setf ok t )
             )
 
-            ;If we're dealing with an 8 puzzle,
-            ;see if it's solvable
+            ; If we're dealing with an 8 puzzle,
+            ; see if it's solvable
             ( ( solvable puzzlelist )
                 ( setf ok t )
             )
 
-            ;if it's not... then set the flag
+            ; If it's not... then set the flag
             ( t
                 ( setf ok nil )
             )
         )
     
-        ;If the program has passed "solvable" or 
-        ;if n > 8, then continue with running the program
+        ; If the program has passed "solvable" or 
+        ; if n > 8, then continue with running the program
         ( cond
-            ( ( not ( null ok ) ) 
+            ( ( not ( null ok ) )
+            
+                ; Generate goal state for the algorithms
+                ( setf goal ( generate-goal ( - ( length puzzlelist ) 1 ) ) )
+            
                 ; BFS
-                ;( setf bfs_answer ( bfs puzzlelist ) )
-                ;( print_stats bfs_answer '"BFS" )
-                ;( print_puzzle bfs_answer n puzzles_per_row )
-
+                ( setf solution ( bfs puzzlelist ) )
+                ( print_stats solution '"BFS" )
+                ( print_puzzle solution n puzzles_per_row )
 
                 ; DFID*
                 ; Add DFID Solution steps here, and then print
-                ( setf dfid_answer ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
-                ( print_stats dfid_answer '"DFID" )
-                ( print_puzzle dfid_answer n puzzles_per_row )
-
-                ; Generate goal state for a* function arguments
-                ( setf goal ( generate-goal ( - ( length puzzlelist ) 1 ) ) )
+                ( setf solution ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
+                ( print_stats solution '"DFID" )
+                ( print_puzzle solution n puzzles_per_row )
 
                 ; A* with Hamming ( admissible )
-                ( setf a_star_answer ( a* puzzlelist
+                ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
                     #'( lambda ( state ) ( count_wrong state goal ) )
                 ) )
-                ( print_stats a_star_answer '"A*" '"Count Incorrect Elements ( Admissible )" )
-                ( print_puzzle a_star_answer n puzzles_per_row )
+                ( print_stats solution '"A*" '"Count Incorrect Elements ( Admissible )" )
+                ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* with Manhattan ( admissible )
-                ( setf a_star_answer ( a* puzzlelist
+                ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
                     #'( lambda ( state ) ( count_wrong_w_rot state goal ) )
                 ) )
-                ( print_stats a_star_answer '"A*" '"Count Manhattan Distance of Incorrect Elements ( Admissible )" )
-                ( print_puzzle a_star_answer n puzzles_per_row )
+                ( print_stats solution '"A*" '"Count Manhattan Distance of Incorrect Elements ( Admissible )" )
+                ( print_puzzle solution n puzzles_per_row )
                 
-                 ;A* ( inadmissible )
-                ( setf a_star_answer ( a* puzzlelist
+                ; A* ( inadmissible )
+                ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
                     #'( lambda ( state ) ( count_wrong_w_nilsson_score state goal ) )
                 ) )
-                ( print_stats a_star_answer '"A*" '"Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
-                ( print_puzzle a_star_answer n puzzles_per_row )
+                ( print_stats solution '"A*" '"Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
+                ( print_puzzle solution n puzzles_per_row )
+            )
+            
+            ; If the puzzle entered is not a solvable puzzle, prints message to the screen
+            ( t
+                ( format t "The entered puzzle is not solvable.~%" )
             )
         )
         
+        ; Suppress NIL on return
         ( values )
     )
 )

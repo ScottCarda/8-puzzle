@@ -211,13 +211,6 @@ Modifications:
 #|                            Heuristic Function                            |#
 #|--------------------------------------------------------------------------|#
 
-; Heuristic function used to estimate the
-; distance a state is from the goal state.
-( defun heuristic ( state )
-    ;( count_wrong state '( 1 2 3 8 0 4 7 6 5 ) )
-    0
-)
-
 ; Heuristic for how close a state is to the
 ; goal state based on number of tiles wrong.
 ( defun count_wrong ( state goal )
@@ -301,53 +294,6 @@ Modifications:
         )
     )
 )
-
-#|
-( defun count_wrong_w_rot ( state goal )
-    ( let
-        (
-            ( lst ( copy-list state ) ) ; Local copy of state
-            ( count 0 ) ; The number of tiles out of place
-            ( puz-size ( isqrt ( length state ) ) ) ; Side length of the puzzle
-            correct-pos ; The correct position of a tile
-        )
-        
-        ( cond
-
-            ; Catch for if the state is an inappropriate length
-            ( ( /= ( length lst ) ( length goal ) )
-                NIL
-            )
-            
-            ( t
-                ; For i = 0 .. length of lst
-                ( do
-                    (
-                        ( i 0 ( 1+ i ) )
-                    )
-                    ( ( >= i ( length lst ) ) count )
-
-                    ; While the tile at position i is out of place
-                    ( do ()
-                        ( ( eq ( nth i lst ) ( nth i goal ) ) )
-                        
-                        ( setf correct-pos ( position ( nth i lst ) goal ) )
-                        
-                        ( setf count ( + count
-                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
-                        ) )
-                    
-                        ( setf count ( + count
-                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
-                        ) )
-                       
-                        ( rotatef ( nth i lst ) ( nth correct-pos lst ) )
-                    )
-                )
-            )
-        )
-    )
-)|#
 
 ; Heuristic for how close a state is to the goal state based
 ; on the Manhattan distance of the tiles out of place. Corrects
@@ -534,5 +480,61 @@ Modifications:
         ( format t "The lists are ~Athe same.~%" cmp-str )
     )
 
+)
+|#
+
+#|
+( defun count_wrong_w_rot ( state goal )
+    ( let
+        (
+            ( lst ( copy-list state ) ) ; Local copy of state
+            ( count 0 ) ; The number of tiles out of place
+            ( puz-size ( isqrt ( length state ) ) ) ; Side length of the puzzle
+            correct-pos ; The correct position of a tile
+        )
+        
+        ( cond
+
+            ; Catch for if the state is an inappropriate length
+            ( ( /= ( length lst ) ( length goal ) )
+                NIL
+            )
+            
+            ( t
+                ; For i = 0 .. length of lst
+                ( do
+                    (
+                        ( i 0 ( 1+ i ) )
+                    )
+                    ( ( >= i ( length lst ) ) count )
+
+                    ; While the tile at position i is out of place
+                    ( do ()
+                        ( ( eq ( nth i lst ) ( nth i goal ) ) )
+                        
+                        ( setf correct-pos ( position ( nth i lst ) goal ) )
+                        
+                        ( setf count ( + count
+                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
+                        ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
+                        ) )
+                       
+                        ( rotatef ( nth i lst ) ( nth correct-pos lst ) )
+                    )
+                )
+            )
+        )
+    )
+)|#
+
+#|
+( let ( ( count -1 ) )
+    ( defun bad-heuristic ( state )
+        ( setf count ( 1+ count ) )
+        count
+    )
 )
 |#
