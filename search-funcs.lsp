@@ -19,10 +19,10 @@ Modifications:
 ( defun successors ( state )
     "Generates the successor of an n-puzzle at the given state."
     ( let (
-            ;if 8-puzzle, then n = 8
-            ;sqrt(8+1) = 3, so 3x3 puzzle
-            ;if 15-puzzle, then n = 15
-            ;sqrt(15+1) = 4, so 4x4 puzzle, etc...            
+            ; if 8-puzzle, then n = 8
+            ; sqrt(8+1) = 3, so 3x3 puzzle
+            ; if 15-puzzle, then n = 15
+            ; sqrt(15+1) = 4, so 4x4 puzzle, etc...            
             ( dimension ( sqrt ( length state ) ) )
 
             ( location ( position 0 state ) ) ; Where the 0 is in the puzzle
@@ -32,8 +32,8 @@ Modifications:
         
         ; Perform UP move and add it to successors
 
-        ;Can only go up if location is greater than (dimension value - 1)
-        ;ex: 8 puzzle is 3x3, so can only move up if location is > 2 (aka 3-1)
+        ; Can only go up if location is greater than (dimension value - 1)
+        ; ex: 8 puzzle is 3x3, so can only move up if location is > 2 (aka 3-1)
         ( when ( > location ( - dimension 1 ) )
             ( setf UP ( copy-list state ) )
 
@@ -44,9 +44,9 @@ Modifications:
         
         ; Perform DOWN move and add it to successors
 
-        ;Can only go up if location is less than ( n value + 1 - dimension value)
-        ;ex: 8 puzzle  is 3x3, so can only move down if location is <  6 (aka 8+1-3)
-        ;ex: 15 puzzle is 4x4, so can only move down if location is < 12 (aka 15+1-4)
+        ; Can only go up if location is less than ( n value + 1 - dimension value)
+        ; ex: 8 puzzle  is 3x3, so can only move down if location is <  6 (aka 8+1-3)
+        ; ex: 15 puzzle is 4x4, so can only move down if location is < 12 (aka 15+1-4)
         ( when ( < location ( - ( length state ) dimension ) )
             ( setf DOWN ( copy-list state ) )
 
@@ -105,7 +105,7 @@ Modifications:
     "Generates a goal state for an n-puzzle given the value of n."
     ( let
         (
-            ( lst NIL )    ; Puzzle expressed in spiral (clock-wise) order
+            ( lst NIL ) ; Puzzle expressed in spiral (clock-wise) order
         )
 
         ; Creates list whose values range from 1 to puzzle-size in order
@@ -210,6 +210,12 @@ Modifications:
 #|--------------------------------------------------------------------------|#
 #|                            Heuristic Function                            |#
 #|--------------------------------------------------------------------------|#
+
+#|
+ | admis: number of values out of place with consideration for distance needed to travel ( div 2 )
+ | admis: number of values out of place ( minus one )
+ | inadmis: comparing sums of rows and columns
+ |#
 
 ; Heuristic for how close a state is to the
 ; goal state based on number of tiles wrong.
@@ -415,126 +421,3 @@ Modifications:
         )
     )
 )
-#|
- | admis: number of values out of place with consideration for distance needed to travel ( div 2 )
- | admis: number of values out of place ( minus one )
- | inadmis: comparing sums of rows and columns
- |#
- 
- #|( defun count_wrong ( state goal )
-    ( cond
-        ( ( or ( not state ) ( not goal ) ) 0 )
-
-        ( ( = ( car state ) ( car goal ) )
-            ( count_wrong ( cdr state ) ( cdr goal ) )
-        )
-
-        ( t
-            ( + ( count_wrong ( cdr state ) ( cdr goal ) ) 1 )
-        )
-    )
-)|#
-
-#|; Generates a goal state for an n-puzzle given the value of n.
-( defun generate-goal ( puzzle-size )
-    ( let
-        (
-            ( lst NIL )    ; puzzle expressed in spiral (clock-wise) order
-        )
-
-        ; Creates list whose values range from 1 to puzzle-size in order
-        ( do ( ( i 1 ( 1+ i ) ) )
-            ( ( > i puzzle-size ) )
-            ( setf lst ( cons i lst ) )
-        )
-        ; Adds 0 to end of the list
-        ( setf lst ( cons 0 lst ) )
-
-        ; Changes lst from spiral order to row-major order
-        ( spiral-to-rows ( reverse lst ) )
-    )
-)|#
-
-;( load 'mapper )
-#|
-( defun compare_test ( n )
-
-    ; n = 115599 is a good test that shows the difference in speed
-    ( let ( lst1 lst2 lst3 cmp-str )
-        ( format t "mapper: " )
-        ( setf lst1 ( generate_goal n ) )
-        ( format t "~A~%" lst1 )
-
-        ( format t "spiral: " )
-        ( setf lst2 ( generate-goal n ) )
-        ( format t "~A~%" lst2 )
-    
-        ( format t "mapper: " )
-        ( setf lst3 ( generate_goal n ) )
-        ( format t "~A~%" lst3 )
-
-        ( if ( equal lst1 lst2 )
-            ( setf cmp-str "" )
-            ( setf cmp-str "not " )
-        )
-        ( format t "The lists are ~Athe same.~%" cmp-str )
-    )
-
-)
-|#
-
-#|
-( defun count_wrong_w_rot ( state goal )
-    ( let
-        (
-            ( lst ( copy-list state ) ) ; Local copy of state
-            ( count 0 ) ; The number of tiles out of place
-            ( puz-size ( isqrt ( length state ) ) ) ; Side length of the puzzle
-            correct-pos ; The correct position of a tile
-        )
-        
-        ( cond
-
-            ; Catch for if the state is an inappropriate length
-            ( ( /= ( length lst ) ( length goal ) )
-                NIL
-            )
-            
-            ( t
-                ; For i = 0 .. length of lst
-                ( do
-                    (
-                        ( i 0 ( 1+ i ) )
-                    )
-                    ( ( >= i ( length lst ) ) count )
-
-                    ; While the tile at position i is out of place
-                    ( do ()
-                        ( ( eq ( nth i lst ) ( nth i goal ) ) )
-                        
-                        ( setf correct-pos ( position ( nth i lst ) goal ) )
-                        
-                        ( setf count ( + count
-                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
-                        ) )
-                    
-                        ( setf count ( + count
-                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
-                        ) )
-                       
-                        ( rotatef ( nth i lst ) ( nth correct-pos lst ) )
-                    )
-                )
-            )
-        )
-    )
-)|#
-
-#|
-( let ( ( count -1 ) )
-    ( defun bad-heuristic ( state )
-        ( setf count ( 1+ count ) )
-        count
-    )
-)
-|#

@@ -199,7 +199,7 @@ Modifications:
 #|--------------------------------------------------------------------------|#
 
 ( defun main ()
-    ;File present, so read in the puzzle from file
+    ; File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
     )
