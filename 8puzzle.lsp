@@ -108,14 +108,14 @@ Modifications:
                 ( print_stats a_star_answer '"A*" '"Count Manhattan Distance of Incorrect Elements ( Admissible )" )
                 ( print_puzzle a_star_answer n puzzles_per_row )
                 
-                ; A* ( inadmissible )
-                ;( setf a_star_answer ( a* puzzlelist
-                ;    #'( lambda ( state ) ( goal? state goal ) )
-                ;    #'successors
-                ;    #'( lambda ( state ) ( count_wrong state goal ) )
-                ;) )
-                ;( print_stats a_star_answer '"A*" '"Count Incorrect Elements" )
-                ;( print_puzzle a_star_answer n puzzles_per_row )
+                 ;A* ( inadmissible )
+                ( setf a_star_answer ( a* puzzlelist
+                    #'( lambda ( state ) ( goal? state goal ) )
+                    #'successors
+                    #'( lambda ( state ) ( count_wrong_w_nilsson_score state goal ) )
+                ) )
+                ( print_stats a_star_answer '"A*" '"Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
+                ( print_puzzle a_star_answer n puzzles_per_row )
             )
         )
         

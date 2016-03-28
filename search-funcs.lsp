@@ -406,54 +406,69 @@ Modifications:
 ( defun count_wrong_w_nilsson_score ( state goal ) 
     ( let
         (
-            ( count 0 )
-            ( puz-size ( isqrt ( length state ) ) )
-            correct-pos
-	    (
+            ( lst ( copy-list state ) ) ; Local copy of state
+            ( count 0 ) ; The number of tiles out of place
+            ( puz-size ( isqrt ( length state ) ) ) ; Side length of the puzzle
+            fetch-pos ; The position of a tile to be fetched
+	    ( nilsson 0 );nilsson sequence score
         )
         
         ( cond
-    
-            ( ( /= ( length state ) ( length goal ) )
+
+            ; Catch for if the state is an inappropriate length
+            ( ( /= ( length lst ) ( length goal ) )
                 NIL
             )
             
-            ( t    
+            ( t
+                ; For i = 0 .. length of lst
                 ( do
                     (
                         ( i 0 ( 1+ i ) )
                     )
-            
-                    ( ( >= i ( length state ) ) ( / count 2 ) )
-            
+                    ( ( >= i ( length lst ) ) count )
+
+                    ; If a tile is out of place:
                     ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
-                        ( setf correct-pos ( position ( nth i state ) goal ) )
-                    
+                        
+                        ; Find the position of the tile that should be at this position
+                        ( setf fetch-pos ( position ( nth i goal ) lst ) )
+                        
+                        ; Increment count by the number of rows off
                         ( setf count ( + count
-                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
+                            ( abs ( - ( floor i puz-size ) ( floor fetch-pos puz-size ) ) )
                         ) )
-                    
+
+                        ; Increment count by the number of columns off
                         ( setf count ( + count
-                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
+                            ( abs ( - ( mod i puz-size ) ( mod fetch-pos puz-size ) ) )
                         ) )
+
+                        ; Swaps the tiles
+                        ( rotatef ( nth i lst ) ( nth fetch-pos lst ) )
                     )
                 )
+		; For i = 0 .. length of lst
                 ( do
                     (
                         ( i 0 ( 1+ i ) )
                     )
                     
                     ( ( >= i ( length state ) ) count )
-                    
+                    ;Checks each tile to see if it is out of place
                     ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
-                        ( setf count ( + 1 count ) )
+			;Adds 2 to nilsson score for non center, 1 if center is off
+			(if ( eq ( nth i goal ) 0 )
+			    ( setf nilsson ( + 1 nilsson ) )
+                            ( setf nilsson ( + 2 nilsson ) )
+			)
                     )
                 )
+		( + count nilsson )
             )
         )
     )
 )
-
 #|
  | admis: number of values out of place with consideration for distance needed to travel ( div 2 )
  | admis: number of values out of place ( minus one )
