@@ -25,6 +25,7 @@ Modifications:
         search-type
         &optional ( heuristic nil )
     )
+    "Print out statistics pertaining to the search algorithm used"
     ( let 
         (
             ( moves ( - (length puzzle) 1 ) )
@@ -57,6 +58,7 @@ Modifications:
         all_puzzles 
         &optional ( n_value 8 ) ( col_size 4 ) 
     )
+    "Print every state transition that led to the solution state"
     
     ;Given a list of puzzle states, print them all out
     (let 
@@ -165,6 +167,7 @@ Modifications:
         &optional ( last nil )
 
     )
+    "Print out a specific row of a given puzzle, as well as an arrow if needed"
     ( let 
         (
             ( start 0 )
@@ -215,6 +218,7 @@ Modifications:
 
 ;Print out a character in the puzzle map with proper formatting
 ( defun format_char ( val )
+    "Format printed out character, if it's a zero change it to a blank"
     ( let
         (
             (x nil)

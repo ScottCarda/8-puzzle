@@ -1,13 +1,29 @@
 #|
                     ***** BFS.LSP *****
 
-Routine for performing Breadth-First Search on the 8-puzzle
+Routine for performing Breadth-First Search on the 8-puzzle. 
+BFS is an exhaustive graph search routine that maintains 
+OPEN and CLOSED lists in order to avoid cyclical conditions. 
+Due to the exhaustive nature, heuristics are not implemented. 
 
-Author: J. Anthony Brackins
+BFS expands nodes one level at a time, as opposed to DFS which 
+will explore the full deep path of a given node. In order to 
+facilitate this in the program, newly generated nodes are added 
+to the end of the OPEN list as successors are generated.
+
+This program is based on the search.lsp code provided by 
+Dr. Weiss on the MCS website, modified to work with our program.
+
+Author:  John M. Weiss, Ph.D. , J. Anthony Brackins
+
+
 Written Spring 2016 for CSC447/547 AI class.
 
-Modifications:
-
+Modifications: 
+Added variables to monitor expanded, distinct, and generated nodes.
+Wrote reformat method to convert node structure into a list of states
+Generating successors and determining goal state are definied in 
+search-funcs.lsp
 |#
 
 #|--------------------------------------------------------------------------|#
@@ -33,24 +49,34 @@ Modifications:
 ( defstruct node state parent )
 
 ; Test if two nodes have the same state.
-( defun equal-states (n1 n2) (equal (node-state n1) (node-state n2)))
+( defun equal-states (n1 n2) 
+    "Determine if two nodes contain identical states"
+    ( equal (node-state n1) (node-state n2) )
+)
 
-( defun bfs ( puz_state )
-
+( defun bfs ( puz_state 
+              &optional ( goal_state nil ) 
+            )
+    "Perform the Breadth-First search algorithm on the n-puzzle"
     ;clear out global vars
     ( setf *generated* 0 )
     ( setf *distinct*  1 )
     ( setf *expanded*  0 )
 
-    ;iterative bfs-search using do*
-    ( bfs-search-do puz_state ( generate-goal ( - ( length puz_state ) 1) ) )
+    ( if ( null goal_state ) 
+        ;TRUE: if goal_state is null, generate it
+        ( bfs-search-do puz_state ( generate-goal ( - ( length puz_state ) 1) ) )
 
+        ;FALSE: just use the goal_state passed in
+        ( bfs-search-do puz_state goal_state )
+    )
 )
 
 #|--------------------------------------------------------------------------|#
 #|                              BFS Functions                               |#
 #|--------------------------------------------------------------------------|#
 ( defun bfs-search-do ( puz_state g_state )
+    "An iterative BFS approach using the do* method"
     (do*
         (
             (current ( make-node :state puz_state :parent nil ) )
@@ -144,6 +170,7 @@ Modifications:
 #|                           Helper Functions                               |#
 #|--------------------------------------------------------------------------|#
 ( defun reformat ( goal_node )
+    "Collapse the node structure into a list that can be printed to the terminal"
     ( do*
         (
             ( state_list ( list ( node-state goal_node ) ) )
@@ -192,6 +219,7 @@ Modifications:
 
 ; Member-state looks for a node on the node-list with the same state.
 ( defun member-state ( state node-list )
+    "Member-state looks for a node on the node-list with the same state."
     ( dolist ( node node-list )
         ( when ( equal state ( node-state node ) ) 
             ( return node ) 

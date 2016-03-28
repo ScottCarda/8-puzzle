@@ -3,10 +3,79 @@
 
 8 Puzzle program for Artificial Intelligence.
 
+In the study of Artificial Intelligence, the 8-puzzle is a 
+simple sliding puzzle "toy" problem used to illustrate the 
+concepts of search space. To solve this puzzle, 8 tiles are 
+repositioned about a 3x3 grid in a sliding fashion in order 
+to acheive a goal state. A standard 8 puzzle game is 
+simulated below:
+
+    1 3 4       1 3 4       1 3 4       1 3         
+    8 6 2   ->  8   2   ->  8 2     ->  8 2 4   ->  
+    7   5       7 6 5       7 6 5       7 6 5       
+
+    1   3       1 2 3       
+    8 2 4   ->  8   4   <- (This is the goal state!)    
+    7 6 5       7 6 5       
+
+The objective of this assignment is to use the Lisp programming 
+language to solve the 8-puzzle using Breadth-first search (BFS), 
+Depth First Iterated Deepening (DFID), and A*, a heuristics-based 
+search method.
+
+Usage:
+
+To run our program, a user must provide the start position of the puzzle.
+
+
+This can be specified in a puzzle file, within the Lisp interpreter by 
+passing a list to the 8puzzle function call, or interactively by calling 
+the 8puzzle function without a start state list.
+
+The puzzlefile contains an 8-puzzle start position, consisting of 9 digits 
+separated by white space, in row-major order. The digits 1-8 represent 
+the 8 tiles, and 0 represents the blank.
+
+------------------------------------------------------------
+
+Example: easy.puz 
+1 3 4 
+8 6 2 
+7 0 5
+
+Command Line: clisp 8puzzle.lsp puzzlefile
+
+------------------------------------------------------------
+
+Example: Using CLISP and passing in start state as a list
+( load '8puzzle )
+( 8puzzle '( 1 3 4 8 6 2 7 0 5 ) )
+
+------------------------------------------------------------
+
+Example: Using CLISP without passing in start state
+( load '8puzzle )
+( 8puzzle )
+Please enter a puzzle:
+>>1 3 4 8 6 2 7 0 5
+
+------------------------------------------------------------
+
 Authors: J. Anthony Brackins, Scott Carda, Leif Torgersen
 Written Spring 2016 for CSC447/547 AI class.
 
-Modifications:
+Modifications: 
+For Additional Credit, the program has been expanded beyond the 
+standard 8 puzzle to handle N-puzzles, where N may be:
+(3^2) - 1 = 8 (standard 8-puzzle)
+(4^2) - 1 = 15-puzzle
+(5^2) - 1 = 24-puzzle, etc.
+
+The program has been scaled up so that the program will be able to 
+generate the goal state of any given puzzle and determine the puzzle 
+size based on the size of the list read in as the initial puzzle state,
+as long as the initial puzzle given to the program is in a valid 
+N-puzzle format.
 
 |#
 
@@ -18,7 +87,6 @@ Modifications:
 ( load 'bfs )
 ( load 'a_star )
 ( load 'dfid)
-;( load 'mapper       )
 ( load 'search-funcs )
 ( load 'print_puzzle )
 ( load 'solvable     )
