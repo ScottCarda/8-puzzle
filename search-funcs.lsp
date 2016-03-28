@@ -350,6 +350,57 @@ Modifications:
     )
 )
 
+( defun count_wrong_w_nilsson_score ( state goal ) 
+    ( let
+        (
+            ( count 0 )
+            ( puz-size ( isqrt ( length state ) ) )
+            correct-pos
+	    (
+        )
+        
+        ( cond
+    
+            ( ( /= ( length state ) ( length goal ) )
+                NIL
+            )
+            
+            ( t    
+                ( do
+                    (
+                        ( i 0 ( 1+ i ) )
+                    )
+            
+                    ( ( >= i ( length state ) ) ( / count 2 ) )
+            
+                    ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
+                        ( setf correct-pos ( position ( nth i state ) goal ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( floor i puz-size ) ( floor correct-pos puz-size ) ) )
+                        ) )
+                    
+                        ( setf count ( + count
+                            ( abs ( - ( mod i puz-size ) ( mod correct-pos puz-size ) ) )
+                        ) )
+                    )
+                )
+                ( do
+                    (
+                        ( i 0 ( 1+ i ) )
+                    )
+                    
+                    ( ( >= i ( length state ) ) count )
+                    
+                    ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
+                        ( setf count ( + 1 count ) )
+                    )
+                )
+            )
+        )
+    )
+)
+
 #|
  | admis: number of values out of place with consideration for distance needed to travel ( div 2 )
  | admis: number of values out of place ( minus one )
