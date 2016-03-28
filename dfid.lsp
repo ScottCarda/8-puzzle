@@ -22,7 +22,7 @@ Written Spring 2016 for CSC447/547 AI class.
 	( let ( goalFound goalState )
 		;this sets the goal if not 8 puzzle
 		( when ( not ( = n_value 8 ) )
-			( setf goalState ( generate_goal n_value ) )
+			( setf goalState ( generate-goal n_value ) )
 		)
 		( cond
 			;first basis case if the goal is found
