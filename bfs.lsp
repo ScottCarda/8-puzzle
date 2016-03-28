@@ -43,7 +43,7 @@ Modifications:
     ( setf *expanded*  0 )
 
     ;iterative bfs-search using do*
-    ( bfs-search-do puz_state ( generate_goal ( - ( length puz_state ) 1) ) )
+    ( bfs-search-do puz_state ( generate-goal ( - ( length puz_state ) 1) ) )
 
 )
 

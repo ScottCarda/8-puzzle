@@ -18,7 +18,7 @@ Modifications:
 ( load 'bfs )
 ( load 'a_star )
 ( load 'dfid)
-( load 'mapper       )
+;( load 'mapper       )
 ( load 'search-funcs )
 ( load 'print_puzzle )
 ( load 'solvable     )
@@ -51,7 +51,7 @@ Modifications:
 
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
-        #|( cond 
+        ( cond 
             ;If n > 8 just flag as ok, since
             ;solvable func doesnt work for non
             ;8puzzles
@@ -69,38 +69,53 @@ Modifications:
             ( t
                 ( setf ok nil )
             )
-        )|#
-        
-        ( setf ok T )
-
+        )
     
         ;If the program has passed "solvable" or 
         ;if n > 8, then continue with running the program
         ( cond
             ( ( not ( null ok ) ) 
-                ;BFS
-                ( setf bfs_answer ( bfs puzzlelist ) )
-                ( print_stats bfs_answer '"BFS" )
-                ( print_puzzle bfs_answer n puzzles_per_row )
+                ; BFS
+                ;( setf bfs_answer ( bfs puzzlelist ) )
+                ;( print_stats bfs_answer '"BFS" )
+                ;( print_puzzle bfs_answer n puzzles_per_row )
 
 
-                ;DFID*
-                ;Add DFID Solution steps here, and then print
+                ; DFID*
+                ; Add DFID Solution steps here, and then print
                 ( setf dfid_answer ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
                 ( print_stats dfid_answer '"DFID" )
                 ( print_puzzle dfid_answer n puzzles_per_row )
 
-                ;Generate goal state for a* function arguments
-                ( setf goal ( generate_goal ( - ( length puzzlelist ) 1 ) ) )
+                ; Generate goal state for a* function arguments
+                ( setf goal ( generate-goal ( - ( length puzzlelist ) 1 ) ) )
 
-                ;A*
+                ; A* with Hamming ( admissible )
                 ( setf a_star_answer ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
                     #'( lambda ( state ) ( count_wrong state goal ) )
                 ) )
-                ( print_stats a_star_answer '"A*" '"Count Incorrect Elements" )
+                ( print_stats a_star_answer '"A*" '"Count Incorrect Elements ( Admissible )" )
                 ( print_puzzle a_star_answer n puzzles_per_row )
+                
+                ; A* with Manhattan ( admissible )
+                ( setf a_star_answer ( a* puzzlelist
+                    #'( lambda ( state ) ( goal? state goal ) )
+                    #'successors
+                    #'( lambda ( state ) ( count_wrong_w_rot state goal ) )
+                ) )
+                ( print_stats a_star_answer '"A*" '"Count Manhattan Distance of Incorrect Elements ( Admissible )" )
+                ( print_puzzle a_star_answer n puzzles_per_row )
+                
+                ; A* ( inadmissible )
+                ;( setf a_star_answer ( a* puzzlelist
+                ;    #'( lambda ( state ) ( goal? state goal ) )
+                ;    #'successors
+                ;    #'( lambda ( state ) ( count_wrong state goal ) )
+                ;) )
+                ;( print_stats a_star_answer '"A*" '"Count Incorrect Elements" )
+                ;( print_puzzle a_star_answer n puzzles_per_row )
             )
         )
         
