@@ -191,7 +191,12 @@ Written Spring 2016 for CSC447/547 AI class.
 ;        parent-state - the state that the node's parent holds
 ( defun make_node ( state parent heuristic )
     "Creates a node."
-    ( list ( 1+ ( car parent ) ) ( funcall heuristic state ) state ( caddr parent ) )
+    ( list
+        ( 1+ ( car parent ) ) ; The g value of a state ( distance from the start state )
+        ( funcall heuristic state ) ; The h' value of a state ( estimated distance from the goal )
+        state ; The state
+        ( caddr parent ) ; The parent state
+    )
 )
 
 ; Recursively searches the open_list for the node with the smallest f' value.
@@ -220,7 +225,7 @@ Written Spring 2016 for CSC447/547 AI class.
 ; Calculates a node's f' value as g + h'.
 ; Small function, but helps to reduce clutter.
 ( defun eval_node ( node )
-    "Gets a node's f' value"
+    "Gets a node's f' value."
     ( + ( car node ) ( cadr node ) )
 )
 
