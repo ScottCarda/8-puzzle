@@ -51,7 +51,7 @@ Modifications:
 
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
-        #|( cond 
+        ( cond 
             ;If n > 8 just flag as ok, since
             ;solvable func doesnt work for non
             ;8puzzles
@@ -69,19 +69,16 @@ Modifications:
             ( t
                 ( setf ok nil )
             )
-        )|#
-        
-        ( setf ok T )
-
+        )
     
         ;If the program has passed "solvable" or 
         ;if n > 8, then continue with running the program
         ( cond
             ( ( not ( null ok ) ) 
                 ; BFS
-                ( setf bfs_answer ( bfs puzzlelist ) )
-                ( print_stats bfs_answer '"BFS" )
-                ( print_puzzle bfs_answer n puzzles_per_row )
+                ;( setf bfs_answer ( bfs puzzlelist ) )
+                ;( print_stats bfs_answer '"BFS" )
+                ;( print_puzzle bfs_answer n puzzles_per_row )
 
 
                 ; DFID*
