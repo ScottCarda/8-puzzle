@@ -222,22 +222,22 @@ N-puzzle format.
             solution              ; Anser returned by an algorithm
         )
     
-        ;If puzzlelist is NIL when (8puzzle) is called,
-        ;this means no start puzzle was supplied (obviously)
-        ;so prompt the user to enter one.
+        ; If puzzlelist is NIL when (8puzzle) is called,
+        ; this means no start puzzle was supplied (obviously)
+        ; so prompt the user to enter one.
         ( when ( null puzzlelist )
             ( format t "~%Please enter a puzzle:~%>> " )
             ( setf puzzlelist ( read-puzzle ) )
         )
 
-        ;N-size of the puzzle is the length of the puzzle - 1
-        ;EX: 8 puzzle is 3x3 = 9 minus 1 for the space = 8!
+        ; N-size of the puzzle is the length of the puzzle - 1
+        ; EX: 8 puzzle is 3x3 = 9 minus 1 for the space = 8!
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
-        ;The following conditional checks will determine whether 
-        ;the supplied puzzle can possibly reach a goal state. 
-        ;The potential errors are described below, and will be 
-        ;returned to the user in situations where they would arise.
+        ; The following conditional checks will determine whether 
+        ; the supplied puzzle can possibly reach a goal state. 
+        ; The potential errors are described below, and will be 
+        ; returned to the user in situations where they would arise.
         ( cond
 
             ; If puzzle is blank
@@ -312,7 +312,11 @@ N-puzzle format.
 #|                              MAIN FUNCTION                               |#
 #|--------------------------------------------------------------------------|#
 
+; This function handles the case when this script is run as an argument
+; to the interpreter, and a puzzle file is supplied. This will automatically
+; call the 8puzzle function with the puzzle read in from the given file.
 ( defun main ()
+    "Automatically calls the 8puzzle function when the 8puzzle.lsp script is run."
     ; File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
