@@ -4,8 +4,7 @@
 Contains routines that are specific to n-puzzle state-space searches.
 This includes a function for generating successors to a state, functions for
 defining and checking for goal states, a function for checking if a state is
-solvable, heuristic functions, and functions for converting between puzzle
-formats.
+solvable, and functions for converting between puzzle formats.
 
 Authors: J. Anthony Brackins, Scott Carda, Leif Torgersen
 Written Spring 2016 for CSC447/547 AI class.
