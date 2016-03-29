@@ -181,7 +181,7 @@ off-center, like this:
         ;format for finishing the script
         ( format t "~%" ) 
     )
-    'done
+    (values)
 )
 
 
