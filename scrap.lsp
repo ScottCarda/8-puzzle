@@ -156,6 +156,93 @@
 ;)
 
 #|
+; Recursively searches the state-space by picking the 'best' unexpanded
+; node so far and expanding it, until the goal state is found.
+( defun A*_search ( open_list closed_list goal? successors heuristic )
+    "Recursively searches the state-space with the A* algorithm."
+    ( let
+        (
+            ; Gets the best node in the Open List
+            ( best ( find_best open_list ) )
+            ; Holds '((open_list) (closed_list)) which
+            ; is returned by some functions
+            both
+            succ_list    ; List of successor nodes
+            return_list    ; List that is returned by this function
+        )
+
+        ( cond
+
+            ; If best is the goal state ( base case ):
+            ( ( funcall goal? ( caddr best ) )
+                ; Returns the parent state of the
+                ; goal state followed by the goal state
+                ( list ( nth 3 best) ( nth 2 best ) )
+            )
+
+            ; If not base case:
+            ( t
+                ; Moves best to Closed List
+                ( setf both
+                    ( mov_elem_between_lsts best open_list closed_list )
+                )
+                ( setf open_list ( car both ) )
+                ( setf closed_list ( cadr both ) )
+
+                ; Generates list of successors
+                ( setf succ_list
+                    ( map
+                        'list
+                        #'( lambda ( state )
+                            ( make_node state best heuristic )
+                        )
+                        ( funcall successors ( caddr best ) )
+                    )
+                )
+                
+                ; Update number of nodes expanded
+                ( setf *expanded* ( + *expanded* 1 ) )
+                
+                ; Update number of nodes generated
+                ( setf *generated* ( + *generated* ( length succ_list ) ) )
+
+                ; Processes successors
+                ( setf both ( process_succs succ_list open_list closed_list ) )
+                ( setf open_list ( car both ) )
+                ( setf closed_list ( cadr both ) )
+                
+                ; Recurses to get the return list
+                ( setf return_list ( A*_search open_list closed_list goal? successors heuristic ) )
+                
+                ; The return list holds the list of states that are all one
+                ; move different from their adjacent states, ending in the
+                ; goal state. The list is, at first, just the goal state, and
+                ; it grows by repeatedly adding the parent state of the list's
+                ; leading state to the front of the list. Because the start
+                ; state has NIL for a parent, we know that the list is
+                ; complete when its CAR is NIL.
+
+                ; If the list is not yet complete:
+                ( when ( car return_list )
+                    ; Append the parent state to the front of the list
+                    ( setf  return_list ( cons ( nth 3
+                        ; Finds the node with the leading state
+                        ( get_node_with_state
+                            ( car return_list )
+                            ; Searches both lists
+                            ( append open_list closed_list )
+                        )
+                    ) return_list ) )
+                )
+                ; Returns the list of states
+                return_list
+            )
+        )
+    )
+)
+|#
+
+#|
 ; Iterative version of the a*, only returns if a solution was found.
 ( defun A*_search ( open_list closed_list goal? successors heuristic )
     ( let

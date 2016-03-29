@@ -1,5 +1,5 @@
 #|
-                    ***** PRINT_PUZZLE.LSP *****
+                    ***** PRINT-PUZZLE.LSP *****
 
 Routine for Printing out 8-puzzle in the following format:
 1 2 3
@@ -8,10 +8,40 @@ Routine for Printing out 8-puzzle in the following format:
 
 Where 0 is equivalent to "blank"
 
+With this strategy, a puzzle sequence will be printed out
+like this:
+
+    1 3 4       1 3 4       1 3 4       1 3         
+    8 6 2   ->  8   2   ->  8 2     ->  8 2 4   ->  
+    7   5       7 6 5       7 6 5       7 6 5       
+
+    1   3       1 2 3       
+    8 2 4   ->  8   4       
+    7 6 5       7 6 5       
+
+The program can be modified so that more than 4 states are 
+printed per line, but that is the current default.
+
 Author: J. Anthony Brackins
 Written Spring 2016 for CSC447/547 AI class.
 
 Modifications:
+Rewrote this program to handle printing N-puzzles as well as 
+the 8-puzzle. It should be stressed that this was an incredible 
+pain to pull off. It should also be noted that for puzzles with 
+even-dimensions, such as the 4x4 15 puzzle, the arrows are 
+off-center, like this: 
+
+ 1  2  3  4        1  2  3  4        1  2  3  4        1  2  3  4       
+12 14 15  5   ->  12 14 15  5   ->  12 14 15  5   ->  12 14     5   ->  
+11  9 13  6       11    13  6       11 13     6       11 13 15  6       
+10     8  7       10  9  8  7       10  9  8  7       10  9  8  7       
+
+ 1  2  3  4        1  2  3  4       
+12    14  5   ->  12 13 14  5       
+11 13 15  6       11    15  6       
+10  9  8  7       10  9  8  7       
+
 
 |#
 
@@ -151,7 +181,7 @@ Modifications:
         ;format for finishing the script
         ( format t "~%" ) 
     )
-    'done
+    (values)
 )
 
 
