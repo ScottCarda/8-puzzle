@@ -8,7 +8,9 @@ In the study of Artificial Intelligence, the 8-puzzle is a
 simple sliding puzzle "toy" problem used to illustrate the 
 concepts of search space. To solve this puzzle, 8 tiles are 
 repositioned about a 3x3 grid in a sliding fashion in order 
-to acheive a goal state. A standard 8-puzzle game is 
+to acheive a goal state. These puzzles are represented in 
+row-major form, with the tiles being represented as 1-8, with 
+the space being represented as a 0. A standard 8-puzzle game is 
 simulated below:
 
     1 3 4       1 3 4       1 3 4       1 3         
@@ -82,6 +84,17 @@ The puzzlefile contains an 8-puzzle start position, consisting of 9 digits
 separated by white space, in row-major order. The digits 1-8 represent 
 the 8 tiles, and 0 represents the blank.
 
+An example of a goal state is the following puzzle configuration:
+
+1 2 3       
+8 0 4 
+7 6 5
+
+This configuration will be represented in the CLISP program as the 
+following list:
+
+( 1 2 3 8 0 4 7 6 5 )
+
 ------------------------------------------------------------
 
 **Program Usage Example: Running Program From Command Line**
@@ -140,7 +153,7 @@ N-puzzle format.
 ( load 'newdfid )
 ( load 'search-funcs )
 ( load 'read-puzzle )
-( load 'print_puzzle )
+( load 'print-puzzle )
 
 #|--------------------------------------------------------------------------|#
 #|                             8 Puzzle Routine                             |#
