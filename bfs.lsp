@@ -63,7 +63,15 @@ search-funcs.lsp
 
     ( if ( null goal_state ) 
         ;TRUE: if goal_state is null, generate it
-        ( bfs-search-do puz_state ( generate-goal ( - ( length puz_state ) 1) ) )
+        ( bfs-search-do 
+            puz_state 
+            ( generate-goal 
+                ( - 
+                    ( length puz_state ) 
+                    1
+                ) 
+            ) 
+        )
 
         ;FALSE: just use the goal_state passed in
         ( bfs-search-do puz_state goal_state )
@@ -139,8 +147,18 @@ search-funcs.lsp
                 (
                     ;if both these conditions are not met
                     ( and
-                      ( not ( member temp_node open_list   :test #'equal-states) )
-                      ( not ( member temp_node closed_list :test #'equal-states) )
+                        ( not   ( member 
+                                    temp_node 
+                                    open_list   
+                                    :test #'equal-states
+                                ) 
+                        )
+                        ( not   ( member 
+                                    temp_node 
+                                    closed_list 
+                                    :test #'equal-states
+                                ) 
+                        )
                     )
                     
                     ;add the successor to the open list
@@ -165,7 +183,7 @@ search-funcs.lsp
 #|                           Helper Functions                               |#
 #|--------------------------------------------------------------------------|#
 ( defun reformat ( goal_node )
-    "Collapse the node structure into a list that can be printed to the terminal"
+    "Collapse the node structure into list that can be printed to the terminal"
     ( do*
         (
             ( state_list ( list ( node-state goal_node ) ) )
@@ -175,18 +193,20 @@ search-funcs.lsp
         ;DO* exit condition:
         ;do this until we get back to the beginning, where our start state is
         ;( ( null ( node-parent  current ) ) 
-        ( (or (null current) (null (node-parent current)) )
+        ( (or ( null current ) ( null (node-parent current ) ) )
 
-            ;youre at the beginning, but remember to add that one to the list too!
-            ( if (null current) 
+            ;youre at the beginning, but 
+            ;remember to add that one to the list too!
+            ( if ( null current ) 
 
                 ;TRUE: Don't do anything, this nil check is only to handle
-                ;the rare case that the initial puzzle passed in was the goal state,
-                ;as this causes the node structure to not be built properly.
+                ;the rare case that the initial puzzle passed in was the 
+                ;goal state, as this causes the node structure to not be 
+                ;built properly.
                 nil             
 
-                ;FALSE: Go one step back and add the beginning of the list to the list 
-                ;of states
+                ;FALSE: Go one step back and add the beginning of the list 
+                ;to the list of states
                 ( setf state_list 
                     ( append  
                         ( list ( node-state current ) ) 
@@ -205,7 +225,14 @@ search-funcs.lsp
         )
 
         ;Set nodes into state list in reverse order
-        ( setf state_list ( append  ( list ( node-state current ) ) state_list ) )
+        ( setf state_list 
+            ( append 
+                ( list 
+                    ( node-state current ) 
+                ) 
+                state_list 
+            ) 
+        )
 
         ;the next node to inspect is the parent of the current node
         ( setf current ( node-parent current ) )
