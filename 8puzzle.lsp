@@ -199,7 +199,7 @@ N-puzzle format.
 #|--------------------------------------------------------------------------|#
 
 ( load 'bfs )
-( load 'a_star )
+( load 'a-star )
 ( load 'newdfid )
 ( load 'search-funcs )
 ( load 'read-puzzle )
