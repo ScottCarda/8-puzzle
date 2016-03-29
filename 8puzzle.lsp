@@ -10,7 +10,7 @@ In the study of Artificial Intelligence, the 8-puzzle is a
 simple sliding puzzle "toy" problem used to illustrate the 
 concepts of search space. To solve this puzzle, 8 tiles are 
 repositioned about a 3x3 grid in a sliding fashion in order 
-to acheive a goal state. These puzzles are represented in 
+to achieve a goal state. These puzzles are represented in 
 row-major form, with the tiles being represented as 1-8, with 
 the space being represented as a 0. A standard 8-puzzle game is 
 simulated below:
@@ -50,7 +50,7 @@ neighbors present in the next level.
 --------------------------------------------------------------------------------
 
 **DFID Strategy**
-Depth First Iterated Deepening is a state spaace search strategy 
+Depth First Iterated Deepening is a state space search strategy 
 in which there is a depth limit to the Depth-First Search (DFS) 
 with increasing depth limits until a goal state is reached. This 
 allows for a version of depth-first search similar to BFS but with 
@@ -75,7 +75,7 @@ the remaining cost from n to the goal state.
 --------------------------------------------------------------------------------
 
 **Heuristics**
-Heuristics can be both admissible and inadmissible. Admissable 
+Heuristics can be both admissible and inadmissible. Admissible 
 heuristics never overestimate the cost to reach the goal, allowing 
 admissible heuristics to find the shortest path. This program features 
 both inadmissible and admissible heuristics, and the summary statistics 
@@ -318,7 +318,7 @@ Solution found in 20 moves
 
 **Solving Worst.puz**
 
-Our inadmissable heuristic for A* solves the worst.puz with the 
+Our inadmissible heuristic for A* solves the worst.puz with the 
 following output:
 
 A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements 
@@ -394,7 +394,7 @@ we included this here to show that one of our algorithm was able to solve it.
             ( puzzles_per_row 4 ) ; # of puzzles printed in a row to the screen
             ( goal nil )          ; Goal state for the given puzzle's length
             ( n nil )             ; One less than length of the puzzle (N-size)
-            solution              ; Anser returned by an algorithm
+            solution              ; Answer returned by an algorithm
         )
     
         ; If puzzlelist is NIL when (8puzzle) is called,
