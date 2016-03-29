@@ -21,7 +21,7 @@ Modifications:
 ( defun successors ( state )
     "Generates the successor of an n-puzzle at the given state."
     ( let (
-            ; if 8-puzzle, then n = 8
+            ; If 8-puzzle, then n = 8
             ; sqrt(8+1) = 3, so 3x3 puzzle
             ; if 15-puzzle, then n = 15
             ; sqrt(15+1) = 4, so 4x4 puzzle, etc...            
@@ -46,14 +46,20 @@ Modifications:
         
         ; Perform DOWN move and add it to successors
 
-        ; Can only go up if location is less than ( n value + 1 - dimension value)
-        ; ex: 8 puzzle  is 3x3, so can only move down if location is <  6 (aka 8+1-3)
-        ; ex: 15 puzzle is 4x4, so can only move down if location is < 12 (aka 15+1-4)
+        ; Can only go up if location is less than
+        ; ( n value + 1 - dimension value)
+        ; Ex: 8 puzzle  is 3x3, so can only move down if
+        ; location is <  6 (aka 8+1-3)
+        ; Ex: 15 puzzle is 4x4, so can only move down if
+        ; location is < 12 (aka 15+1-4)
         ( when ( < location ( - ( length state ) dimension ) )
             ( setf DOWN ( copy-list state ) )
 
             ; Move tile over a value equal to the dimension
-            ( rotatef ( nth location DOWN ) ( nth ( + location dimension ) DOWN ) )
+            ( rotatef
+                ( nth location DOWN )
+                ( nth ( + location dimension ) DOWN )
+            )
             ( setf succ ( cons DOWN succ ) )
         )
         
@@ -146,7 +152,9 @@ Modifications:
                 ( do ( ( i 0 ( 1+ i ) ) )
                     ( ( >= i ( - N 1 ) ) )
                     ; Puts top row into spiral
-                    ( setf spiral ( nconc spiral ( list ( nth i temp-lst ) ) ) )
+                    ( setf spiral
+                        ( nconc spiral ( list ( nth i temp-lst ) ) )
+                    )
                     ; Sets up top row for removal
                     ( setf ( nth i temp-lst ) -1 )
                 )
@@ -177,7 +185,7 @@ Modifications:
     "Converts puzzle from spiral order to row-major order."
     ( do
         (
-            ( i 1 ( 1+ i ) ) ; Side length of the puzzle built in each iteration
+            ( i 1 ( 1+ i ) ) ; Side length of puzzle built in each iteration
 
             ( temp-lst ( copy-list lst ) ) ; Local copy of lst
             ( rows NIL ) ; The puzzle listed in row-major order
@@ -226,10 +234,11 @@ Modifications:
             row-with-blank ; Row, starting at zero, of that has the blank
         )
         
-        ; Calculate row-with-blank using dimesion
+        ; Calculate row-with-blank using dimension
         ( setf row-with-blank ( floor ( position 0 puzzle ) dimension ) )
         
-        ; For each element of lst, count the number of preceding elemnts whose value is less 
+        ; For each element of lst, count the number
+        ; of preceding elements whose value is less 
         ( do
             (
                 ( i 0 ( 1+ i ) ) ; Loop variable
@@ -245,7 +254,8 @@ Modifications:
                     )
                     ( ( >= j ( length puzzle ) ) ) ; Stop at end of list
 
-                    ; Count one for each element j whose value is less than that of element i
+                    ; Count one for each element j whose
+                    ; value is less than that of element i
                     ( when
                         ( and
                             ( > ( nth i puzzle ) ( nth j puzzle ) )
@@ -257,7 +267,8 @@ Modifications:
             )
         )
         
-        ; Determine solvablility based on number of inversions, dimension, and which row the blank is on
+        ; Determine whether the state is solvable based on number of
+        ; inversions, dimension, and which row the blank is on
         ( cond
 
             ; If dimension is odd and there are an even number of inversions:
@@ -274,7 +285,8 @@ Modifications:
             (
                 ( and
                     ( evenp dimension )
-                    ; And the the row with the blank is an odd row with even inversions
+                    ; And the row with the blank is an
+                    ; odd row with even inversions
                     ; or an even row with odd inversions
                     ( eq
                         ( oddp row-with-blank )

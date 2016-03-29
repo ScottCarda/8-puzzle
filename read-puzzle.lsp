@@ -19,11 +19,11 @@ Modifications:
 ( defun read-puzzle ()
     "Gets a puzzle from user input."
     ( let
-		(
-			; The user input as a string
-			( str ( read-line ) )
-		)
-		; Pretend the string is a file and pass it to the 
+        (
+            ; The user input as a string
+            ( str ( read-line ) )
+        )
+        ; Pretend the string is a file and pass it to the 
         ( with-input-from-string ( stream str )
             ( get-puzzle stream )
         )
@@ -38,17 +38,17 @@ Modifications:
 ( defun read-puzzle-file ( filename )
     "Reads a puzzle from a file."
     ( let
-		(
-			( file ( open filename ) ) ; The file stream
-			puzzlelist	; The puzzle list to be returned
-		)
+        (
+            ( file ( open filename ) ) ; The file stream
+            puzzlelist    ; The puzzle list to be returned
+        )
 
-		; If the file was successfully opened
+        ; If the file was successfully opened
         ( when file
-			; Uses the stream-reading function to get the puzzle list
+            ; Uses the stream-reading function to get the puzzle list
             ( setf puzzlelist ( get-puzzle file ) )
             ( close file )
-			; Returns the puzzle list
+            ; Returns the puzzle list
             puzzlelist
         )
     )
@@ -58,18 +58,18 @@ Modifications:
 ( defun get-puzzle ( file )
     "Reads a puzzle from an input stream."
     ( let
-		(
-			; Reads the next input from the file
-			( input ( read file NIL NIL ) )
-		)
+        (
+            ; Reads the next input from the file
+            ( input ( read file NIL NIL ) )
+        )
 
         ( cond
-			; If there is no more input ( base case )
+            ; If there is no more input ( base case )
             ( ( not input )
                 NIL
             )
 
-			; Else recurses
+            ; Else recurses
             ( t
                 ( cons input ( get-puzzle file ) )
             )
