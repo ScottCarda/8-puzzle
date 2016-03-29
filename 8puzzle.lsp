@@ -199,7 +199,7 @@ N-puzzle format.
 #|--------------------------------------------------------------------------|#
 
 ( load 'bfs )
-( load 'a_star )
+( load 'a-star )
 ( load 'newdfid )
 ( load 'search-funcs )
 ( load 'read-puzzle )
@@ -217,19 +217,27 @@ N-puzzle format.
     ( let 
         ( 
             ( puzzles_per_row 4 ) ; Number of puzzles printed in a row to the screen
-            ( goal nil ) ; Goal state for the given puzzle's length
-            ( n nil ) ; One less than the length of the puzzle, the 'n' of n-puzzle
-            solution ; Anser returned by an algorithm
+            ( goal nil )          ; Goal state for the given puzzle's length
+            ( n nil )             ; One less than the length of the puzzle (N-size)
+            solution              ; Anser returned by an algorithm
         )
     
-        ; If a puzzle was not passed in, prompt the user for a puzzle
+        ; If puzzlelist is NIL when (8puzzle) is called,
+        ; this means no start puzzle was supplied (obviously)
+        ; so prompt the user to enter one.
         ( when ( null puzzlelist )
             ( format t "~%Please enter a puzzle:~%>>" )
             ( setf puzzlelist ( read-puzzle ) )
         )
 
+        ; N-size of the puzzle is the length of the puzzle - 1
+        ; EX: 8 puzzle is 3x3 = 9 minus 1 for the space = 8!
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
+        ; The following conditional checks will determine whether 
+        ; the supplied puzzle can possibly reach a goal state. 
+        ; The potential errors are described below, and will be 
+        ; returned to the user in situations where they would arise.
         ( cond
 
             ; If puzzle is blank
