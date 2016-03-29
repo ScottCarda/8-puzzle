@@ -1,46 +1,60 @@
+#|
+                    ***** DFID.LSP *****
+
+Routine which performs a depth first iterated deepening
+search on the state space for the n puzzle to find an optimal 
+solution.
+
+Author: Leif Torgersen
+Written Spring 2016 for CSC447/547 AI class.
+
+|#
+
+( defparameter *generated* 0 )
+( defparameter *distinct* 0 )
+( defparameter *expanded* 0 )
 
 ;--------------------------------------------------------------------------
 
 ; Node structure: stores state and parent.
-(defstruct node state parent)
+(defstruct deepnode state parent depth)
 
 ; Test if two nodes have the same state.
-(defun equal-states (n1 n2) (equal (node-state n1) (node-state n2)))
+(defun deepequal-states (n1 n2) (equal (deepnode-state n1) (deepnode-state n2)))
 
 ;--------------------------------------------------------------------------
 
 ; Depth-first-search implements the OPEN list as a STACK of (state parent) nodes.
-(defun dfs (start) 
-	(let ((search_depth 0))
-		(loop while ( not (search_dfs start 'dfs search_depth)) do
+(defun dfs (start &optional (goal '(1 2 3 8 0 4 7 6 5))) 
+	"Calls DFS and itterates depth we search to"
+	(let ((search_depth 0)(final_path))
+		( setf *generated* 0 )
+		( setf *distinct* 0 )
+		( setf *expanded* 0 )
+		;while loop which continues to increase depth and call dfid
+		(loop while ( not final_path ) do
+			(setf final_path (search_dfs start 'dfs search_depth goal))
 			(incf search_depth)
 		)
+		final_path
 	)
 )
 
 ; Given a start state and a search type (BFS or DFS), return a path from the start to the goal.
-(defun search_dfs (start type search_depth)
-    (do*                                                    ; note use of sequential DO*
-        (                                                   ; initialize local loop vars
-            (curNode (make-node :state start :parent nil))  ; current node: (start nil)
-            (OPEN (list curNode))                           ; OPEN list:    ((start nil))
-            (CLOSED nil)                                    ; CLOSED list:  ( )
-	    (current_depth 0)
+(defun search_dfs (start type search_depth goal)
+	"Performs DFS to the designated depth"
+    (do*                                                    		 ; note use of sequential DO*
+        (                                                  		 ; initialize local loop vars
+            (curNode (make-deepnode :state start :parent nil :depth 0))  ; current node: (start nil)
+            (OPEN (list curNode))                       	         ; OPEN list:    ((start nil))
+            (CLOSED nil)                                   		 ; CLOSED list:  ( )
         )
 
         ; termination condition - return solution path when goal is found
-        ((goal? (node-state curNode)) (build-solution curNode CLOSED))
+        ((equal goal (deepnode-state curNode)) (build-solution curNode CLOSED))
 
         ; loop body
         (when (null OPEN) (return nil))             ; no solution
-
-	(when (> (+ current_depth 1 ) search_Depth) (return nil))
-
-	(when (goal? (node-state curNode)) (return (build-solution curNode CLOSED)))
-
-	(format t "~A~%" (node-state curNode))
-
-	( incf current_depth )
 
         ; get current node from OPEN, update OPEN and CLOSED
         (setf curNode (car OPEN))
@@ -48,20 +62,21 @@
         (setf CLOSED (cons curNode CLOSED))
 
         ; add successors of current node to OPEN
-        (dolist (child (successors (node-state curNode)))
+        (dolist (child (successors (deepnode-state curNode)))
 
             ; for each child node
-            (setf child (make-node :state child :parent (node-state curNode)))
+            (setf child (make-deepnode :state child :parent (deepnode-state curNode) :depth ( + (deepnode-depth curNode) 1 )))
 
             ; if the node is not on OPEN or CLOSED
-            (if (and (not (member child OPEN   :test #'equal-states))
-                     (not (member child CLOSED :test #'equal-states)))
+            (if (and (and (not (member child OPEN   :test #'deepequal-states))
+                     (not (member child CLOSED :test #'deepequal-states))
+					 (< (deepnode-depth child) (1+ search_depth) ) ) )
 
                 ; add it to the OPEN list
                 (cond
 
                     ; DFS - add to start of OPEN list (stack)
-                    ((eq type 'dfs) (setf OPEN (cons child OPEN)))
+                    ( (eq type 'dfs) (setf OPEN (cons child OPEN)))
 
                     ; error handling for incorrect usage
                     (t (format t "SEARCH: bad search type! ~s~%" type) (return nil))
@@ -76,22 +91,24 @@
 ; Build-solution takes a state and a list of (state parent) pairs
 ; and constructs the list of states that led to the current state
 ; by tracing back through the parents to the start node (nil parent).
-(defun build-solution (node node-list)
+(defun build-solution (deepnode deepnode-list)
+	"Builds the solution once the goal is found"
     (do
-        ((path (list (node-state node))))        ; local loop var
-        ((null (node-parent node)) path)         ; termination condition
+        ((path (list (deepnode-state deepnode))))        ; local loop var
+        ((null (deepnode-parent deepnode)) path)         ; termination condition
 
         ; find the parent of the current node
-        (setf node (member-state (node-parent node) node-list))
+        (setf deepnode (deepmember-state (deepnode-parent deepnode) deepnode-list))
 
         ; add it to the path
-        (setf path (cons (node-state node) path))
+        (setf path (cons (deepnode-state deepnode) path))
     )
 )
 
-; Member-state looks for a node on the node-list with the same state.
-(defun member-state (state node-list)
-    (dolist (node node-list)
-        (when (equal state (node-state node)) (return node))
+; deepMember-state looks for a node on the node-list with the same state.
+(defun deepmember-state (state deepnode-list)
+	"Checks to see if a node is in the list"
+    (dolist (deepnode deepnode-list)
+        (when (equal state (deepnode-state deepnode)) (return deepnode))
     )
 )

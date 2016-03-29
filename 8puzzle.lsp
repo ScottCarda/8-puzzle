@@ -8,7 +8,7 @@ In the study of Artificial Intelligence, the 8-puzzle is a
 simple sliding puzzle "toy" problem used to illustrate the 
 concepts of search space. To solve this puzzle, 8 tiles are 
 repositioned about a 3x3 grid in a sliding fashion in order 
-to acheive a goal state. A standard 8 puzzle game is 
+to acheive a goal state. A standard 8-puzzle game is 
 simulated below:
 
     1 3 4       1 3 4       1 3 4       1 3         
@@ -21,7 +21,7 @@ simulated below:
 
 **Program Objective**
 The objective of this assignment is to use the Lisp programming 
-language to solve the 8-puzzle using Breadth-first search (BFS), 
+language to solve the 8-puzzle using Breadth-First Search (BFS), 
 Depth First Iterated Deepening (DFID), and A*, a heuristics-based 
 search method.
 
@@ -117,7 +117,7 @@ Written Spring 2016 for CSC447/547 AI class.
 
 **Modifications**
 For Additional Credit, the program has been expanded beyond the 
-standard 8 puzzle to handle N-puzzles, where N may be:
+standard 8-puzzle to handle N-puzzles, where N may be:
 (3^2) - 1 = 8 (standard 8-puzzle)
 (4^2) - 1 = 15-puzzle
 (5^2) - 1 = 24-puzzle, etc.
@@ -137,10 +137,10 @@ N-puzzle format.
 
 ( load 'bfs )
 ( load 'a_star )
-( load 'dfid)
+( load 'newdfid )
 ( load 'search-funcs )
+( load 'read-puzzle )
 ( load 'print_puzzle )
-( load 'solvable     )
 
 #|--------------------------------------------------------------------------|#
 #|                             8 Puzzle Routine                             |#
@@ -155,7 +155,7 @@ N-puzzle format.
             ( puzzles_per_row 4 ) ; Number of puzzles printed in a row to the screen
             ( goal nil ) ; Goal state for the given puzzle's length
             ( n nil ) ; One less than the length of the puzzle, the 'n' of n-puzzle
-            ok ; Flag for if the puzzle is solvable
+;            ok ; Flag for if the puzzle is solvable
             solution ; Anser returned by an algorithm
         )
     
@@ -163,37 +163,58 @@ N-puzzle format.
         ; solvable func doesnt work for non
         ; 8puzzles
         ( when ( null puzzlelist )
-                ( format t "~%Please enter a puzzle:~%>>" )
-                ( setf puzzlelist ( read-puzzle ) )
+            ( format t "~%Please enter a puzzle:~%>>" )
+            ( setf puzzlelist ( read-puzzle ) )
         )
 
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
-        ( cond 
-            ; If n > 8 just flag as ok, since
-            ; solvable func doesnt work for non
-            ; 8puzzles
-            ( ( > n 8 )
-                ( setf ok t )
-            )
-
-            ; If we're dealing with an 8 puzzle,
-            ; see if it's solvable
-            ( ( solvable puzzlelist )
-                ( setf ok t )
-            )
-
-            ; If it's not... then set the flag
-            ( t
-                ( setf ok nil )
-            )
-        )
-    
-        ; If the program has passed "solvable" or 
-        ; if n > 8, then continue with running the program
+;        ( cond 
+;            ; If n > 8 just flag as ok, since
+;            ; solvable func doesnt work for non
+;            ; 8puzzles
+;            ( ( > n 8 )
+;                ( setf ok t )
+;            )
+;
+;            ; If we're dealing with an 8 puzzle,
+;            ; see if it's solvable
+;            ( ( solvable puzzlelist )
+;                ( setf ok t )
+;            )
+;
+;            ; If it's not... then set the flag
+;            ( t
+;                ( setf ok nil )
+;            )
+;        )
+;    
+;        ; If the program has passed "solvable" or 
+;        ; if n > 8, then continue with running the program
+;        ( cond
+;            ( ( not ( null ok ) )
         ( cond
-            ( ( not ( null ok ) )
+
+            ; If puzzle is blank
+            ( ( not puzzlelist )
+                ( format t "Error: Entered puzzle is blank.~%" )
+            )
             
+            ; If puzzle size is not a perfect square
+            ( ( /=
+                ( length puzzlelist )
+                ( * ( isqrt ( length puzzlelist ) ) ( isqrt ( length puzzlelist ) ) )
+              )
+              ( format t "Error: Puzzle size is not a perfect square.~%" )
+            )
+
+            ; If the puzzle entered is not a solvable puzzle, prints message to the screen
+            ( ( not ( solvablep puzzlelist ) )
+                ( format t "The entered puzzle is not solvable.~%" )
+            )
+
+            ; If the puzzle entered is a solvable puzzle, use algorithms to solve it
+            ( t
                 ; Generate goal state for the algorithms
                 ( setf goal ( generate-goal ( - ( length puzzlelist ) 1 ) ) )
             
@@ -204,7 +225,7 @@ N-puzzle format.
 
                 ; DFID*
                 ; Add DFID Solution steps here, and then print
-                ( setf solution ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
+                ( setf solution ( dfs  puzzlelist goal ) )
                 ( print_stats solution "DFID" )
                 ( print_puzzle solution n puzzles_per_row )
 
@@ -235,82 +256,10 @@ N-puzzle format.
                 ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
                 ( print_puzzle solution n puzzles_per_row )
             )
-            
-            ; If the puzzle entered is not a solvable puzzle, prints message to the screen
-            ( t
-                ( format t "The entered puzzle is not solvable.~%" )
-            )
         )
         
         ; Suppress NIL on return
         ( values )
-    )
-)
-
-
-#|--------------------------------------------------------------------------|#
-#|                       Read In Puzzle from CLI                            |#
-#|--------------------------------------------------------------------------|#
-
-; Gets a puzzle from user input.
-( defun read-puzzle ()
-    "Gets a puzzle from user input."
-    ( let
-		(
-			; The user input as a string
-			( str ( read-line ) )
-		)
-		; Pretend the string is a file and pass it to the 
-        ( with-input-from-string ( stream str )
-            ( get-puzzle stream )
-        )
-    )
-)
-
-#|--------------------------------------------------------------------------|#
-#|                      Read In Puzzle from File                            |#
-#|--------------------------------------------------------------------------|#
-
-; Reads a puzzle in from a file.
-( defun read-puzzle-file ( filename )
-    "Reads a puzzle from a file."
-    ( let
-		(
-			( file ( open filename ) ) ; The file stream
-			puzzlelist	; The puzzle list to be returned
-		)
-
-		; If the file was successfully opened
-        ( when file
-			; Uses the stream-reading function to get the puzzle list
-            ( setf puzzlelist ( get-puzzle file ) )
-            ( close file )
-			; Returns the puzzle list
-            puzzlelist
-        )
-    )
-)
-
-; Recursively reads a puzzle from an input stream.
-( defun get-puzzle ( file )
-    "Reads a puzzle from an input stream."
-    ( let
-		(
-			; Reads the next input from the file
-			( input ( read file NIL NIL ) )
-		)
-
-        ( cond
-			; If there is no more input ( base case )
-            ( ( not input )
-                NIL
-            )
-
-			; Else recurses
-            ( t
-                ( cons input ( get-puzzle file ) )
-            )
-        )
     )
 )
 

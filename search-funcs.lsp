@@ -1,8 +1,11 @@
 #|
                     ***** SEARCH-FUNCS.LSP *****
 
-Routines for generating successor states and determining 
-Goal states have been reached.
+Contains routines that are specific to n-puzzle state-space searches.
+This includes a function for generating successors to a state, functions for
+defining and checking for goal states, a function for checking if a state is
+solvable, heuristic functions, and functions for converting between puzzle
+formats.
 
 Authors: J. Anthony Brackins, Scott Carda, Leif Torgersen
 Written Spring 2016 for CSC447/547 AI class.
@@ -12,7 +15,7 @@ Modifications:
 |#
 
 #|--------------------------------------------------------------------------|#
-#|                           SUCCESSORS FUNCTION                            |#
+#|                           Successors Function                            |#
 #|--------------------------------------------------------------------------|#
 
 ; Generates the successors of an n-puzzle at the given state.
@@ -76,10 +79,8 @@ Modifications:
     )
 )
 
-
-
 #|--------------------------------------------------------------------------|#
-#|                          Determine Goal State                            |#
+#|                           Goal State Functions                           |#
 #|--------------------------------------------------------------------------|#
 
 ; Determines if you have reached a goal state, perhaps a bit of overkill.
@@ -120,6 +121,10 @@ Modifications:
         ( spiral-to-rows ( reverse lst ) )
     )
 )
+
+#|--------------------------------------------------------------------------|#
+#|                    Puzzle Format Conversion Functions                    |#
+#|--------------------------------------------------------------------------|#
 
 ; Takes a puzzle expressed in row-major order and returns the same puzzle
 ; expressed in spiral (clock-wise) order.
@@ -208,14 +213,8 @@ Modifications:
 )
 
 #|--------------------------------------------------------------------------|#
-#|                            Heuristic Function                            |#
+#|                           Heuristic Functions                            |#
 #|--------------------------------------------------------------------------|#
-
-#|
- | admis: number of values out of place with consideration for distance needed to travel ( div 2 )
- | admis: number of values out of place ( minus one )
- | inadmis: comparing sums of rows and columns
- |#
 
 ; Heuristic for how close a state is to the
 ; goal state based on number of tiles wrong.
@@ -234,7 +233,7 @@ Modifications:
             )
             
             ( t
-                ; For i = 0 .. lenght of state
+                ; For i = 0 .. length of state
                 ( do
                     (
                         ( i 0 ( 1+ i ) )
@@ -355,7 +354,14 @@ Modifications:
     )
 )
 
-( defun count_wrong_w_nilsson_score ( state goal ) 
+; Heuristic for how close a state is to the goal state based
+; on the Manhattan distance of the tiles out of place plus a score
+; based on the number of tiles out of place. Corrects tiles
+; out of place as it finds them.
+( defun count_wrong_w_nilsson_score ( state goal )
+    "Counts the Manhattan distance of the tiles
+    out of place and the number out of place, moveing 
+    error tiles as it finds them."
     ( let
         (
             ( lst ( copy-list state ) ) ; Local copy of state
@@ -421,3 +427,112 @@ Modifications:
         )
     )
 )
+
+#|--------------------------------------------------------------------------|#
+#|                            Solvable Predicate                            |#
+#|--------------------------------------------------------------------------|#
+
+; Determines if the puzzle is solvable ( able to be ordered in a clock-wise
+; spiral ) by counting the number of inversions in the puzzle
+( defun solvablep ( puzzle )
+    "Predicate function for determining if the given puzzle is solvable."
+    ( let
+        (
+            ( count 0 ) ; Count of inversions
+            ( dimension ( isqrt ( length puzzle ) ) ) ; Side length of puzzle
+            row-with-blank ; Row, starting at zero, of that has the blank
+        )
+        
+        ; Calculate row-with-blank using dimesion
+        ( setf row-with-blank ( floor ( position 0 puzzle ) dimension ) )
+        
+        ; For each element of lst, count the number of preceding elemnts whose value is less 
+        ( do
+            (
+                ( i 0 ( 1+ i ) ) ; Loop variable
+            )
+            ( ( >= i ( length puzzle ) ) count )
+            
+            ; Skip zero
+            ( unless ( = ( nth i puzzle ) 0 )
+                ; Loop through all elements of list after i
+                ( do
+                    (
+                        ( j i ( 1+ j ) ) ; Loop variable
+                    )
+                    ( ( >= j ( length puzzle ) ) ) ; Stop at end of list
+
+                    ; Count one for each element j whose value is less than that of element i
+                    ( when
+                        ( and
+                            ( > ( nth i puzzle ) ( nth j puzzle ) )
+                            ( /= ( nth j puzzle ) 0 ) ; Skip zero
+                        )
+                        ( setf count ( 1+ count ) )
+                    )
+                )
+            )
+        )
+        
+        ; Determine solvablility based on number of inversions, dimension, and which row the blank is on
+        ( cond
+
+            ; If dimension is odd and there are an even number of inversions:
+            (
+                ( and
+                    ( oddp dimension )
+                    ( oddp count )
+                )
+                ; Then the puzzle is solvable
+                T
+            )
+            
+            ; If dimension is even:
+            (
+                ( and
+                    ( evenp dimension )
+                    ; And the the row with the blank is an odd row with even inversions
+                    ; or an even row with odd inversions
+                    ( eq
+                        ( oddp row-with-blank )
+                        ( evenp count )
+                    )
+                )
+                ; Then the puzzle is solvable
+                T
+            )
+
+            ; Else, not solvable
+            ( t NIL )
+        )
+    )
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -18,15 +18,13 @@ Written Spring 2016 for CSC447/547 AI class.
 #|                       Recursive DFS with make depth                      |#
 #|--------------------------------------------------------------------------|#
 
-( defun deepSearch ( currentState maxDepth currentDepth n_value )
-	( let ( goalFound goalState )
+( defun deepSearch ( currentState maxDepth currentDepth goal )
+	"Performs DFS to the designated depth"
+	( let ( goalFound )
 		;this sets the goal if not 8 puzzle
-		( when ( not ( = n_value 8 ) )
-			( setf goalState ( generate-goal n_value ) )
-		)
 		( cond
 			;first basis case if the goal is found
-			( ( or ( goal? currentState ) ( equal currentState goalState ) )
+			( ( or ( goal? currentState ) ( equal currentState goal ) )
 				( list currentState )
 			)
 			;second basis case if we are as deep as we are 
@@ -44,7 +42,7 @@ Written Spring 2016 for CSC447/547 AI class.
 						;counts each child generated
 						( incf *generated* )
 						;actual recursive call, storing the return value
-						( setf goalFound ( deepSearch succ maxDepth ( 1+ currentDepth ) n_value ) )
+						( setf goalFound ( deepSearch succ maxDepth ( 1+ currentDepth ) goal ) )
 					)
 				)
 				;This builds the path as we recurse out if the goal is found
@@ -61,7 +59,8 @@ Written Spring 2016 for CSC447/547 AI class.
 #|                    Iteration for iterated deepening                      |#
 #|--------------------------------------------------------------------------|#
 
-( defun dfid ( startState &optional ( n_value 8 ) )
+( defun dfid ( startState &optional ( goal '(1 2 3 8 0 4 7 6 5) ) )
+	"Calls DFS and itterates depth we search to"
 	( let ( ( searchDepth 0 ) pathReturn )
 		;initializes globals for this function
 		( setf *generated* 0 )
@@ -70,7 +69,7 @@ Written Spring 2016 for CSC447/547 AI class.
 		;while loop which continues to increase depth and call dfid
 		;if the goal is not yet found
 		( loop while ( not pathReturn ) do
-			( setf pathReturn ( deepSearch startState searchDepth 0  n_value ) )
+			( setf pathReturn ( deepSearch startState searchDepth 0 goal) )
 			( incf searchDepth )
 		)
 
