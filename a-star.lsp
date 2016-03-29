@@ -184,8 +184,8 @@ Written Spring 2016 for CSC447/547 AI class.
 ( defun make_node ( state parent heuristic )
     "Creates a node."
     ( list
-        ( 1+ ( car parent ) ) ; The g value of a state ( distance from the start state )
-        ( funcall heuristic state ) ; The h' value of a state ( estimated distance from the goal )
+        ( 1+ ( car parent ) )       ; The g value ( dist from start state )
+        ( funcall heuristic state ) ; The h' value ( estimated dist from goal )
         state ; The state
         ( caddr parent ) ; The parent state
     )
