@@ -124,9 +124,11 @@ Please enter a puzzle:
 
 **Solving Worst.puz**
 
-Our inadmissable heuristic for A* solves the worst.puz with the following output:
+Our inadmissable heuristic for A* solves the worst.puz with the 
+following output:
 
-A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible ) )
+A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements 
+    and add Nilsson sequence score ( Inadmissible ) )
 ---------------------------------------------------------
 Solution found in 32 moves
 29578 nodes generated (17010 distinct nodes), 10567 nodes expanded
@@ -216,9 +218,9 @@ N-puzzle format.
     "Solves an n-puzzle using several state-space search algorithms."
     ( let 
         ( 
-            ( puzzles_per_row 4 ) ; Number of puzzles printed in a row to the screen
+            ( puzzles_per_row 4 ) ; # of puzzles printed in a row to the screen
             ( goal nil )          ; Goal state for the given puzzle's length
-            ( n nil )             ; One less than the length of the puzzle (N-size)
+            ( n nil )             ; One less than length of the puzzle (N-size)
             solution              ; Anser returned by an algorithm
         )
     
@@ -248,17 +250,22 @@ N-puzzle format.
             ; If puzzle size is not a perfect square
             ( ( /=
                 ( length puzzlelist )
-                ( * ( isqrt ( length puzzlelist ) ) ( isqrt ( length puzzlelist ) ) )
+                ( * 
+                    ( isqrt ( length puzzlelist ) ) 
+                    ( isqrt ( length puzzlelist ) ) 
+                )
               )
               ( format t "Error: Puzzle size is not a perfect square.~%" )
             )
 
-            ; If the puzzle entered is not a solvable puzzle, prints message to the screen
+            ; If the puzzle entered is not a solvable puzzle, 
+            ;prints message to the screen
             ( ( not ( solvablep puzzlelist ) )
                 ( format t "The entered puzzle is not solvable.~%" )
             )
 
-            ; If the puzzle entered is a solvable puzzle, use algorithms to solve it
+            ; If the puzzle entered is a solvable puzzle, 
+            ;use algorithms to solve it
             ( t
                 ; Generate goal state for the algorithms
                 ( setf goal ( generate-goal ( - ( length puzzlelist ) 1 ) ) )
@@ -278,27 +285,42 @@ N-puzzle format.
                 ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'( lambda ( state ) ( count_wrong state goal ) )
+                    #'( lambda ( state ) 
+                        ( count_wrong state goal ) 
+                      )
                 ) )
-                ( print_stats solution "A*" "Count Incorrect Elements ( Admissible )" )
+                ( print_stats solution 
+                    "A*" 
+                    "Count Incorrect Elements ( Admissible )" 
+                )
                 ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* with Manhattan ( admissible )
                 ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'( lambda ( state ) ( count_wrong_w_rot state goal ) )
+                    #'( lambda ( state ) 
+                        ( count_wrong_w_rot state goal ) 
+                      )
                 ) )
-                ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements ( Admissible )" )
+                ( print_stats solution 
+                    "A*" 
+                    "Count Manhattan Distance of Incorrect Elements ( Admissible )" 
+                )
                 ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* ( inadmissible )
                 ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'( lambda ( state ) ( count_wrong_w_nilsson_score state goal ) )
+                    #'( lambda ( state ) 
+                        ( count_wrong_w_nilsson_score state goal ) 
+                      )
                 ) )
-                ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
+                ( print_stats solution 
+                    "A*" 
+                    "Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" 
+                )
                 ( print_puzzle solution n puzzles_per_row )
             )
         )
@@ -316,7 +338,7 @@ N-puzzle format.
 ; to the interpreter, and a puzzle file is supplied. This will automatically
 ; call the 8puzzle function with the puzzle read in from the given file.
 ( defun main ()
-    "Automatically calls the 8puzzle function when the 8puzzle.lsp script is run."
+    "Automatically calls the 8puzzle function when 8puzzle.lsp script is run."
     ; File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
