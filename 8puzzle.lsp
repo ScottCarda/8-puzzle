@@ -86,7 +86,7 @@ N-puzzle format.
 
 ( load 'bfs )
 ( load 'a_star )
-( load 'dfid )
+( load 'newdfid )
 ( load 'search-funcs )
 ( load 'read-puzzle )
 ( load 'print_puzzle )
@@ -174,7 +174,7 @@ N-puzzle format.
 
                 ; DFID*
                 ; Add DFID Solution steps here, and then print
-                ( setf solution ( dfid  puzzlelist goal ) )
+                ( setf solution ( dfs  puzzlelist goal ) )
                 ( print_stats solution "DFID" )
                 ( print_puzzle solution n puzzles_per_row )
 
