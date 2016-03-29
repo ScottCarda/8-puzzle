@@ -3,6 +3,9 @@
 #|                             search-funcs.lsp                             |#
 #|--------------------------------------------------------------------------|#
 
+;Routines for generating successor states and determining 
+;Goal states have been reached.
+
  #|( defun count_wrong ( state goal )
     ( cond
         ( ( or ( not state ) ( not goal ) ) 0 )
