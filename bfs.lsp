@@ -26,12 +26,6 @@ Generating successors and determining goal state are definied in
 search-funcs.lsp
 |#
 
-#|--------------------------------------------------------------------------|#
-#|                               Files Loaded                               |#
-#|--------------------------------------------------------------------------|#
-
-; File that specifies the goal? function and
-; the successors function required by the algorithm.
 
 #|--------------------------------------------------------------------------|#
 #|                               Global Vars                                |#
@@ -47,6 +41,10 @@ search-funcs.lsp
 
 ; Initialize a Node Structure
 ( defstruct node state parent )
+
+#|--------------------------------------------------------------------------|#
+#|                              BFS Functions                               |#
+#|--------------------------------------------------------------------------|#
 
 ; Test if two nodes have the same state.
 ( defun equal-states (n1 n2) 
@@ -72,9 +70,6 @@ search-funcs.lsp
     )
 )
 
-#|--------------------------------------------------------------------------|#
-#|                              BFS Functions                               |#
-#|--------------------------------------------------------------------------|#
 ( defun bfs-search-do ( puz_state g_state )
     "An iterative BFS approach using the do* method"
     (do*
