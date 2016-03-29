@@ -131,11 +131,7 @@ search-funcs.lsp
         ; add successors of current node to OPEN
 
         ( setf *generated* ( + *generated* ( length successor_lst ) ) )
-        ;( format t "CURRENT   : ~A~%" (node-state current) )
-        ;( format t "SUCCESSORS: ~A~%~%" successor_lst )
         
-        ;( setf node_count ( + ( length successor_lst ) node_count ) )
-        ;( format t "Successors Generated: ~D~%" node_count )
         ; for each successor node
         ( loop for s in successor_lst do 
 
@@ -148,17 +144,15 @@ search-funcs.lsp
                     ;if both these conditions are not met
                     ( and
                         ( not   ( member 
-                                    temp_node 
-                                    open_list   
-                                    :test #'equal-states
-                                ) 
-                        )
+                            temp_node 
+                            open_list   
+                            :test #'equal-states
+                        ) )
                         ( not   ( member 
-                                    temp_node 
-                                    closed_list 
-                                    :test #'equal-states
-                                ) 
-                        )
+                            temp_node 
+                            closed_list 
+                            :test #'equal-states
+                        ) )
                     )
                     
                     ;add the successor to the open list

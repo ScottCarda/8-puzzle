@@ -21,16 +21,16 @@ Modifications:
 ( defun successors ( state )
     "Generates the successor of an n-puzzle at the given state."
     ( let (
-            ; If 8-puzzle, then n = 8
-            ; sqrt(8+1) = 3, so 3x3 puzzle
-            ; if 15-puzzle, then n = 15
-            ; sqrt(15+1) = 4, so 4x4 puzzle, etc...            
-            ( dimension ( sqrt ( length state ) ) )
+        ; If 8-puzzle, then n = 8
+        ; sqrt(8+1) = 3, so 3x3 puzzle
+        ; if 15-puzzle, then n = 15
+        ; sqrt(15+1) = 4, so 4x4 puzzle, etc...            
+        ( dimension ( sqrt ( length state ) ) )
 
-            ( location ( position 0 state ) ) ; Where the 0 is in the puzzle
-            ( succ '() ) ; List of successors to be returned
-            UP DOWN LEFT RIGHT ; Possible successors
-          )
+        ( location ( position 0 state ) ) ; Where the 0 is in the puzzle
+        ( succ '() ) ; List of successors to be returned
+        UP DOWN LEFT RIGHT ; Possible successors
+      )
         
         ; Perform UP move and add it to successors
 

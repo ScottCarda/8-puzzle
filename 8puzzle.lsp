@@ -218,13 +218,13 @@ N-puzzle format.
 #|                               Files Loaded                               |#
 #|--------------------------------------------------------------------------|#
 
-( load 'bfs )
 ( load 'a-star )
-( load 'newdfid )
-( load 'search-funcs )
-( load 'read-puzzle )
-( load 'print-puzzle )
+( load 'bfs )
+( load 'dfid )
 ( load 'heuristics )
+( load 'print-puzzle )
+( load 'read-puzzle )
+( load 'search-funcs )
 
 #|--------------------------------------------------------------------------|#
 #|                             8 Puzzle Routine                             |#
@@ -367,8 +367,8 @@ N-puzzle format.
 ( defun main ()
     "Automatically calls the 8puzzle function when 8puzzle.lsp script is run."
     ; File present, so read in the puzzle from file
-	( when ( = ( length *args* ) 1 )
-	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
+        ( when ( = ( length *args* ) 1 )
+            ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
     )
 )
 

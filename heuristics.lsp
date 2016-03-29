@@ -234,14 +234,14 @@ Modifications:
                     ( ( >= i ( length state ) ) count )
                     ; Checks each tile to see if it is out of place
                     ( when ( not ( eq ( nth i state ) ( nth i goal ) ) )
-            ; Adds 2 to nilsson score for non center, 1 if center is off
-            (if ( eq ( nth i goal ) 0 )
-                ( setf nilsson ( + 1 nilsson ) )
+                        ; Adds 2 to nilsson score for non center, 1 if center is off
+                        (if ( eq ( nth i goal ) 0 )
+                            ( setf nilsson ( + 1 nilsson ) )
                             ( setf nilsson ( + 2 nilsson ) )
-            )
+                        )
                     )
                 )
-        ( + count nilsson )
+                ( + count nilsson )
             )
         )
     )
