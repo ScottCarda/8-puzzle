@@ -61,6 +61,54 @@ Please enter a puzzle:
 
 ------------------------------------------------------------
 
+**Solving Worst.puz**
+
+Our inadmissable heuristic for A* solves the worst.puz with the following output:
+
+A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible ) )
+---------------------------------------------------------
+Solution found in 32 moves
+29578 nodes generated (17010 distinct nodes), 10567 nodes expanded
+
+    5 6 7       5 6 7       5 6 7       5 6 7       
+    4   8   ->  4 8     ->  4 8 1   ->  4 8 1   ->  
+    3 2 1       3 2 1       3 2         3   2       
+
+    5 6 7       5 6 7       5 6         5   6       
+    4   1   ->  4 1     ->  4 1 7   ->  4 1 7   ->  
+    3 8 2       3 8 2       3 8 2       3 8 2       
+
+    5 1 6       5 1 6       5 1 6       5 1 6       
+    4   7   ->    4 7   ->  3 4 7   ->  3 4 7   ->  
+    3 8 2       3 8 2         8 2       8   2       
+
+    5 1 6       5 1 6       5 1 6       5 1 6       
+    3 4 7   ->  3 4     ->  3   4   ->    3 4   ->  
+    8 2         8 2 7       8 2 7       8 2 7       
+
+      1 6       1   6       1 3 6       1 3 6       
+    5 3 4   ->  5 3 4   ->  5   4   ->  5 2 4   ->  
+    8 2 7       8 2 7       8 2 7       8   7       
+
+    1 3 6       1 3 6       1 3         1   3       
+    5 2 4   ->  5 2     ->  5 2 6   ->  5 2 6   ->  
+    8 7         8 7 4       8 7 4       8 7 4       
+
+    1 2 3       1 2 3       1 2 3       1 2 3       
+    5   6   ->    5 6   ->  8 5 6   ->  8 5 6   ->  
+    8 7 4       8 7 4         7 4       7   4       
+
+    1 2 3       1 2 3       1 2 3       1 2 3       
+    8   6   ->  8 6     ->  8 6 4   ->  8 6 4   ->  
+    7 5 4       7 5 4       7 5         7   5       
+
+    1 2 3       
+    8   4       
+    7 6 5
+    
+Due to the fact that worst.puz is not solvable with our other algorithms,
+we included this here to show that one of our algorithms was able to solve it.
+
 Authors: J. Anthony Brackins, Scott Carda, Leif Torgersen
 Written Spring 2016 for CSC447/547 AI class.
 
