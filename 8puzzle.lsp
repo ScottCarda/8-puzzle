@@ -153,7 +153,7 @@ N-puzzle format.
 
                 ; DFID*
                 ; Add DFID Solution steps here, and then print
-                ( setf solution ( dfid  puzzlelist (- ( length puzzlelist ) 1) ) )
+                ( setf solution ( dfid  puzzlelist goal ) )
                 ( print_stats solution "DFID" )
                 ( print_puzzle solution n puzzles_per_row )
 
