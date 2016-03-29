@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>8-puzzle by jbrackins</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>8-puzzle</h1>
+        <h2>Lisp program for solving the 8-puzzle</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/jbrackins/8-puzzle/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/jbrackins/8-puzzle/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/jbrackins/8-puzzle" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="8-puzzle" class="anchor" href="#8-puzzle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>8-puzzle</h1>
+
+<h1>
+<a id="8-puzzle-description" class="anchor" href="#8-puzzle-description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>8-Puzzle Description</h1>
+
+<p>In the study of Artificial Intelligence, the 8-puzzle is a 
+simple sliding puzzle "toy" problem used to illustrate the 
+concepts of search space. To solve this puzzle, 8 tiles are 
+repositioned about a 3x3 grid in a sliding fashion in order 
+to acheive a goal state. These puzzles are represented in 
+row-major form, with the tiles being represented as 1-8, with 
+the space being represented as a 0. A standard 8-puzzle game is 
+simulated below:</p>
+
+<pre><code>1 3 4       1 3 4       1 3 4       1 3         
+8 6 2   -&gt;  8   2   -&gt;  8 2     -&gt;  8 2 4   -&gt;  
+7   5       7 6 5       7 6 5       7 6 5       
+
+1   3       1 2 3       
+8 2 4   -&gt;  8   4   &lt;- (This is the goal state!)    
+7 6 5       7 6 5       
+</code></pre>
+
+<h1>
+<a id="program-objective" class="anchor" href="#program-objective" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Objective</h1>
+
+<p>The objective of this assignment is to use the Lisp programming 
+language to solve the 8-puzzle using Breadth-First Search (BFS), 
+Depth First Iterated Deepening (DFID), and A*, a heuristics-based 
+search method.</p>
+
+<h1>
+<a id="bfs-strategy" class="anchor" href="#bfs-strategy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BFS Strategy</h1>
+
+<p>Breadth-First Search is a standard algorithm for searching graph 
+structures. From a given start state, this algorithm searches 
+neighboring nodes of the same level first, before exploring 
+neighbors present in the next level.</p>
+
+<pre><code>      (1)
+     / | \
+   (2)(3)(4)
+   /   |  | \
+ (5)  (6)(7)(8)
+  |
+ (9)
+</code></pre>
+
+<h1>
+<a id="dfid-strategy" class="anchor" href="#dfid-strategy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DFID Strategy</h1>
+
+<p>Depth First Iterated Deepening is a state spaace search strategy 
+in which there is a depth limit to the Depth-First Search (DFS) 
+with increasing depth limits until a goal state is reached. This 
+allows for a version of depth-first search similar to BFS but with 
+much smaller memory requirements. </p>
+
+<h1>
+<a id="a-search-strategy" class="anchor" href="#a-search-strategy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A* Search Strategy</h1>
+
+<p>The A* search algorithm is a version of Dijkstra's algorithm that 
+performs better than exhaustive searches in certain situations due to 
+its use of heuristics to guide search.
+As the search algorithm is running, A* determines the next node to 
+expand by determining the estimate of the cost or weight to reach 
+the goal state. This is done by using the following equation:</p>
+
+<pre><code>f(n) = g(n) + h(n)
+</code></pre>
+
+<p>Where n is the node on the path, g(n) is the cost from the start 
+node to the given n, and h(n) is the heuristic value that estimates 
+the remaining cost from n to the goal state.</p>
+
+<h1>
+<a id="heuristics" class="anchor" href="#heuristics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Heuristics</h1>
+
+<p>Heuristics can be both admissible and inadmissible. Admissable 
+heuristics never overestimate the cost to reach the goal, allowing 
+admissible heuristics to find the shortest path. This program features 
+both inadmissible and admissible heuristics, and the summary statistics 
+printed during the program's runtime will indicate whether an algorithm 
+is using an inadmissible or admissible heuristic, as well as a brief 
+summary of the heuristic itself. BFS and DFID are exhaustive search 
+techniques, and as a result do not use heuristics at all.</p>
+
+<h1>
+<a id="program-usage" class="anchor" href="#program-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Usage</h1>
+
+<p>To run our program, a user must provide the start position of the puzzle.</p>
+
+<p>This can be specified in a puzzle file, within the Lisp interpreter by 
+passing a list to the 8puzzle function call, or interactively by calling 
+the 8puzzle function without a start state list.</p>
+
+<p>The puzzlefile contains an 8-puzzle start position, consisting of 9 digits 
+separated by white space, in row-major order. The digits 1-8 represent 
+the 8 tiles, and 0 represents the blank.</p>
+
+<p>An example of a goal state is the following puzzle configuration:</p>
+
+<pre><code>1 2 3       
+8 0 4 
+7 6 5
+</code></pre>
+
+<p>This configuration will be represented in the CLISP program as the 
+following list:</p>
+
+<pre><code>( 1 2 3 8 0 4 7 6 5 )
+</code></pre>
+
+<hr>
+
+<h1>
+<a id="program-usage-example-running-program-from-command-line" class="anchor" href="#program-usage-example-running-program-from-command-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Usage Example: Running Program From Command Line</h1>
+
+<p>easy.puz file:</p>
+
+<pre><code>1 3 4 
+8 6 2 
+7 0 5
+</code></pre>
+
+<p>Command Line: </p>
+
+<pre><code>clisp 8puzzle.lsp puzzlefile
+</code></pre>
+
+<hr>
+
+<h1>
+<a id="program-usage-example-clisp-passing-start-state-as-list" class="anchor" href="#program-usage-example-clisp-passing-start-state-as-list" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Usage Example: CLISP, passing start state as list</h1>
+
+<p>Inside CLISP:</p>
+
+<pre><code>( load '8puzzle )
+( 8puzzle '( 1 3 4 8 6 2 7 0 5 ) )
+</code></pre>
+
+<hr>
+
+<h1>
+<a id="program-usage-example-clisp-without-passing-in-start-state" class="anchor" href="#program-usage-example-clisp-without-passing-in-start-state" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Usage Example: CLISP without passing in start state</h1>
+
+<p>Inside CLISP:</p>
+
+<pre><code>( load '8puzzle )
+( 8puzzle )
+Please enter a puzzle:
+&gt;&gt;1 3 4 8 6 2 7 0 5
+</code></pre>
+
+<hr>
+
+<h1>
+<a id="solving-worstpuz" class="anchor" href="#solving-worstpuz" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Solving Worst.puz</h1>
+
+<p>Our inadmissable heuristic for A* solves the worst.puz with the following output:</p>
+
+<pre><code>A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements and 
+add Nilsson sequence score ( Inadmissible ) )
+---------------------------------------------------------
+Solution found in 32 moves
+29578 nodes generated (17010 distinct nodes), 10567 nodes expanded
+
+5 6 7       5 6 7       5 6 7       5 6 7       
+4   8   -&gt;  4 8     -&gt;  4 8 1   -&gt;  4 8 1   -&gt;  
+3 2 1       3 2 1       3 2         3   2       
+
+5 6 7       5 6 7       5 6         5   6       
+4   1   -&gt;  4 1     -&gt;  4 1 7   -&gt;  4 1 7   -&gt;  
+3 8 2       3 8 2       3 8 2       3 8 2       
+
+5 1 6       5 1 6       5 1 6       5 1 6       
+4   7   -&gt;    4 7   -&gt;  3 4 7   -&gt;  3 4 7   -&gt;  
+3 8 2       3 8 2         8 2       8   2       
+
+5 1 6       5 1 6       5 1 6       5 1 6       
+3 4 7   -&gt;  3 4     -&gt;  3   4   -&gt;    3 4   -&gt;  
+8 2         8 2 7       8 2 7       8 2 7       
+
+  1 6       1   6       1 3 6       1 3 6       
+5 3 4   -&gt;  5 3 4   -&gt;  5   4   -&gt;  5 2 4   -&gt;  
+8 2 7       8 2 7       8 2 7       8   7       
+
+1 3 6       1 3 6       1 3         1   3       
+5 2 4   -&gt;  5 2     -&gt;  5 2 6   -&gt;  5 2 6   -&gt;  
+8 7         8 7 4       8 7 4       8 7 4       
+
+1 2 3       1 2 3       1 2 3       1 2 3       
+5   6   -&gt;    5 6   -&gt;  8 5 6   -&gt;  8 5 6   -&gt;  
+8 7 4       8 7 4         7 4       7   4       
+
+1 2 3       1 2 3       1 2 3       1 2 3       
+8   6   -&gt;  8 6     -&gt;  8 6 4   -&gt;  8 6 4   -&gt;  
+7 5 4       7 5 4       7 5         7   5       
+
+1 2 3       
+8   4       
+7 6 5
+</code></pre>
+
+<p>Due to the fact that worst.puz is not solvable with our other algorithms,
+we included this here to show that one of our algorithm was able to solve it.</p>
+
+<h1>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h1>
+
+<p>J. Anthony Brackins, Scott Carda, Leif Torgersen</p>
+
+<h1>
+<a id="course" class="anchor" href="#course" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Course</h1>
+
+<p>Written Spring 2016 for CSC447/547 AI class.</p>
+
+<h1>
+<a id="modifications" class="anchor" href="#modifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modifications</h1>
+
+<p>For Additional Credit, the program has been expanded beyond the 
+standard 8-puzzle to handle N-puzzles, where N may be:
+(3^2) - 1 = 8 (standard 8-puzzle)
+(4^2) - 1 = 15-puzzle
+(5^2) - 1 = 24-puzzle, etc.</p>
+
+<p>The program has been scaled up so that the program will be able to 
+generate the goal state of any given puzzle and determine the puzzle 
+size based on the size of the list read in as the initial puzzle state,
+as long as the initial puzzle given to the program is in a valid 
+N-puzzle format.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
