@@ -118,7 +118,7 @@ Command Line: clisp 8puzzle.lsp puzzlefile
 ( load '8puzzle )
 ( 8puzzle )
 Please enter a puzzle:
->>1 3 4 8 6 2 7 0 5
+>> 1 3 4 8 6 2 7 0 5
 
 ------------------------------------------------------------
 
@@ -168,7 +168,7 @@ Solution found in 32 moves
     7 6 5
     
 Due to the fact that worst.puz is not solvable with our other algorithms,
-we included this here to show that one of our algorithms was able to solve it.
+we included this here to show that one of our algorithm was able to solve it.
 
 ------------------------------------------------------------
 
@@ -226,7 +226,7 @@ N-puzzle format.
         ;this means no start puzzle was supplied (obviously)
         ;so prompt the user to enter one.
         ( when ( null puzzlelist )
-            ( format t "~%Please enter a puzzle:~%>>" )
+            ( format t "~%Please enter a puzzle:~%>> " )
             ( setf puzzlelist ( read-puzzle ) )
         )
 
