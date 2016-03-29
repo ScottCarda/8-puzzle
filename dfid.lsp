@@ -19,6 +19,7 @@ Written Spring 2016 for CSC447/547 AI class.
 #|--------------------------------------------------------------------------|#
 
 ( defun deepSearch ( currentState maxDepth currentDepth goal )
+	"Performs DFS to the designated depth"
 	( let ( goalFound )
 		;this sets the goal if not 8 puzzle
 		( cond
@@ -59,6 +60,7 @@ Written Spring 2016 for CSC447/547 AI class.
 #|--------------------------------------------------------------------------|#
 
 ( defun dfid ( startState &optional ( goal '(1 2 3 8 0 4 7 6 5) ) )
+	"Calls DFS and itterates depth we search to"
 	( let ( ( searchDepth 0 ) pathReturn )
 		;initializes globals for this function
 		( setf *generated* 0 )

@@ -1,3 +1,18 @@
+#|
+                    ***** DFID.LSP *****
+
+Routine which performs a depth first iterated deepening
+search on the state space for the n puzzle to find an optimal 
+solution.
+
+Author: Leif Torgersen
+Written Spring 2016 for CSC447/547 AI class.
+
+|#
+
+( defparameter *generated* 0 )
+( defparameter *distinct* 0 )
+( defparameter *expanded* 0 )
 
 ;--------------------------------------------------------------------------
 
@@ -11,7 +26,12 @@
 
 ; Depth-first-search implements the OPEN list as a STACK of (state parent) nodes.
 (defun dfs (start &optional (goal '(1 2 3 8 0 4 7 6 5))) 
+	"Calls DFS and itterates depth we search to"
 	(let ((search_depth 0)(final_path))
+		( setf *generated* 0 )
+		( setf *distinct* 0 )
+		( setf *expanded* 0 )
+		;while loop which continues to increase depth and call dfid
 		(loop while ( not final_path ) do
 			(setf final_path (search_dfs start 'dfs search_depth goal))
 			(incf search_depth)
@@ -22,6 +42,7 @@
 
 ; Given a start state and a search type (BFS or DFS), return a path from the start to the goal.
 (defun search_dfs (start type search_depth goal)
+	"Performs DFS to the designated depth"
     (do*                                                    		 ; note use of sequential DO*
         (                                                  		 ; initialize local loop vars
             (curNode (make-deepnode :state start :parent nil :depth 0))  ; current node: (start nil)
@@ -49,7 +70,7 @@
             ; if the node is not on OPEN or CLOSED
             (if (and (and (not (member child OPEN   :test #'deepequal-states))
                      (not (member child CLOSED :test #'deepequal-states))
-		     (< (deepnode-depth child) (1+ search_depth) ) ) )
+					 (< (deepnode-depth child) (1+ search_depth) ) ) )
 
                 ; add it to the OPEN list
                 (cond
@@ -71,6 +92,7 @@
 ; and constructs the list of states that led to the current state
 ; by tracing back through the parents to the start node (nil parent).
 (defun build-solution (deepnode deepnode-list)
+	"Builds the solution once the goal is found"
     (do
         ((path (list (deepnode-state deepnode))))        ; local loop var
         ((null (deepnode-parent deepnode)) path)         ; termination condition
@@ -85,6 +107,7 @@
 
 ; deepMember-state looks for a node on the node-list with the same state.
 (defun deepmember-state (state deepnode-list)
+	"Checks to see if a node is in the list"
     (dolist (deepnode deepnode-list)
         (when (equal state (deepnode-state deepnode)) (return deepnode))
     )
