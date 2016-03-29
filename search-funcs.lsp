@@ -354,7 +354,14 @@ Modifications:
     )
 )
 
-( defun count_wrong_w_nilsson_score ( state goal ) 
+; Heuristic for how close a state is to the goal state based
+; on the Manhattan distance of the tiles out of place plus a score
+; based on the number of tiles out of place. Corrects tiles
+; out of place as it finds them.
+( defun count_wrong_w_nilsson_score ( state goal )
+    "Counts the Manhattan distance of the tiles
+    out of place and the number out of place, moveing 
+    error tiles as it finds them."
     ( let
         (
             ( lst ( copy-list state ) ) ; Local copy of state

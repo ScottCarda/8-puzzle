@@ -44,7 +44,7 @@
         (dolist (child (successors (deepnode-state curNode)))
 
             ; for each child node
-            (setf child (make-deepnode :state child :parent (deepnode-state curNode) :depth ( 1+ (deepnode-depth curNode))))
+            (setf child (make-deepnode :state child :parent (deepnode-state curNode) :depth ( + (deepnode-depth curNode) 1 )))
 
             ; if the node is not on OPEN or CLOSED
             (if (and (and (not (member child OPEN   :test #'deepequal-states))
