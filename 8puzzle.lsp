@@ -219,13 +219,10 @@ N-puzzle format.
             ( puzzles_per_row 4 ) ; Number of puzzles printed in a row to the screen
             ( goal nil ) ; Goal state for the given puzzle's length
             ( n nil ) ; One less than the length of the puzzle, the 'n' of n-puzzle
-;            ok ; Flag for if the puzzle is solvable
             solution ; Anser returned by an algorithm
         )
     
-        ; If n > 8 just flag as ok, since
-        ; solvable func doesnt work for non
-        ; 8puzzles
+        ; If a puzzle was not passed in, prompt the user for a puzzle
         ( when ( null puzzlelist )
             ( format t "~%Please enter a puzzle:~%>>" )
             ( setf puzzlelist ( read-puzzle ) )
@@ -307,7 +304,11 @@ N-puzzle format.
 #|                              MAIN FUNCTION                               |#
 #|--------------------------------------------------------------------------|#
 
+; This function handles the case when this script is run as an argument
+; to the interpreter, and a puzzle file is supplied. This will automatically
+; call the 8puzzle function with the puzzle read in from the given file.
 ( defun main ()
+    "Automatically calls the 8puzzle function when the 8puzzle.lsp script is run."
     ; File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )

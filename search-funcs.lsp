@@ -85,7 +85,7 @@ Modifications:
 ; Determines if you have reached a goal state, perhaps a bit of overkill.
 ( defun goal? (
     curr_state 
-    &optional (goal_state '(1 2 3 8 0 4 7 6 5))
+    &optional ( goal_state '( 1 2 3 8 0 4 7 6 5 ) )
     )
     "Predicate function that determines if given state is the goal state."
     ( let ( check_list found_goal )
