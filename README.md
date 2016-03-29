@@ -132,7 +132,7 @@ Inside CLISP:
 
 #Solving Worst.puz
 
-    Our inadmissable heuristic for A* solves the worst.puz with the following output:
+Our inadmissable heuristic for A* solves the worst.puz with the following output:
 
     A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements and 
     add Nilsson sequence score ( Inadmissible ) )
