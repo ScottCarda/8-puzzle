@@ -71,7 +71,9 @@ off-center, like this:
             ( format t "( heuristic: ~A )~%" heuristic )
         )
 
-        ( format t "---------------------------------------------------------~%" )
+        ( format t 
+            "---------------------------------------------------------~%" 
+        )
         ( format t "Solution found in ~A moves~%" moves ) 
         ( format t "~A nodes generated "   *generated* )
         ( format t "(~A distinct nodes), " *distinct* )
@@ -147,25 +149,44 @@ off-center, like this:
                     ;Check to see if you have any more puzzles to print
                     ( if ( < y (- count 1 ) ) 
 
-                        ;TRUE - Print out an arrow, there are still more puzzles!
-                        ;Also check that the given slice is in the "middle" of the 
-                        ;puzzle so that it properly only prints out one arrow.
+                        ;TRUE - Print out an arrow, 
+                        ;there are still more puzzles!
+                        ;Also check that the given slice is 
+                        ;in the "middle" of the puzzle so that it 
+                        ;properly only prints out one arrow.
                         ( if 
-                            ( and ( > puz_itr ( - (floor n_value 2) puz_width  ) ) 
-                                  ( < puz_itr (floor n_value 2) ) )
-                                        ;TRUE: this is the center slice, so print the arrow
-                                        ( print_slice ( nth y all_puzzles  ) puz_width puz_itr t )
-                                        ;FALSE: this is not the center slice, no arror needed
-                                        ( print_slice ( nth y all_puzzles  ) puz_width puz_itr )
+                            ( and ( > 
+                                    puz_itr 
+                                    ( - (floor n_value 2) puz_width  ) 
+                                  ) 
+                                  ( < 
+                                    puz_itr 
+                                    (floor n_value 2) ) 
+                            )
+                             
+                            ;TRUE: center slice, so print the arrow
+                            ( print_slice 
+                                ( nth y all_puzzles  ) 
+                                puz_width puz_itr 
+                                t 
+                            )
+                            ;FALSE: not the center slice, no arror needed
+                            ( print_slice 
+                                ( nth y all_puzzles ) 
+                                puz_width puz_itr 
+                            )
                         )
 
                         ;FALSE - No More arrows, you're at the end of the list!
-                        ( print_slice ( nth y all_puzzles  ) puz_width puz_itr )
+                        ( print_slice 
+                            ( nth y all_puzzles ) 
+                            puz_width puz_itr 
+                        )
                     )
 
                     ;increment iterators for traversing each block of puzzles
-                    ( setq col       ( + 1 col       ) )
-                    ( setq y         ( + 1 y         ) )
+                    ( setq col ( + 1 col ) )
+                    ( setq y   ( + 1 y   ) )
                 )
 
                 ;increment puz_iterator to get the next row of a given block

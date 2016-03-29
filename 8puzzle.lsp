@@ -3,6 +3,8 @@
 
 8 Puzzle program for Artificial Intelligence.
 
+--------------------------------------------------------------------------------
+
 **8-Puzzle Description**
 In the study of Artificial Intelligence, the 8-puzzle is a 
 simple sliding puzzle "toy" problem used to illustrate the 
@@ -21,11 +23,15 @@ simulated below:
     8 2 4   ->  8   4   <- (This is the goal state!)    
     7 6 5       7 6 5       
 
+--------------------------------------------------------------------------------
+
 **Program Objective**
 The objective of this assignment is to use the Lisp programming 
 language to solve the 8-puzzle using Breadth-First Search (BFS), 
 Depth First Iterated Deepening (DFID), and A*, a heuristics-based 
 search method.
+
+--------------------------------------------------------------------------------
 
 **BFS Strategy**
 Breadth-First Search is a standard algorithm for searching graph 
@@ -41,12 +47,16 @@ neighbors present in the next level.
       |
      (9)
 
+--------------------------------------------------------------------------------
+
 **DFID Strategy**
 Depth First Iterated Deepening is a state spaace search strategy 
 in which there is a depth limit to the Depth-First Search (DFS) 
 with increasing depth limits until a goal state is reached. This 
 allows for a version of depth-first search similar to BFS but with 
 much smaller memory requirements. 
+
+--------------------------------------------------------------------------------
 
 **A* Search Strategy**
 The A* search algorithm is a version of Dijkstra's algorithm that 
@@ -62,6 +72,8 @@ Where n is the node on the path, g(n) is the cost from the start
 node to the given n, and h(n) is the heuristic value that estimates 
 the remaining cost from n to the goal state.
 
+--------------------------------------------------------------------------------
+
 **Heuristics**
 Heuristics can be both admissible and inadmissible. Admissable 
 heuristics never overestimate the cost to reach the goal, allowing 
@@ -71,6 +83,8 @@ printed during the program's runtime will indicate whether an algorithm
 is using an inadmissible or admissible heuristic, as well as a brief 
 summary of the heuristic itself. BFS and DFID are exhaustive search 
 techniques, and as a result do not use heuristics at all.
+
+--------------------------------------------------------------------------------
 
 **Program Usage**
 To run our program, a user must provide the start position of the puzzle.
@@ -95,7 +109,7 @@ following list:
 
 ( 1 2 3 8 0 4 7 6 5 )
 
-------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 **Program Usage Example: Running Program From Command Line**
 
@@ -106,13 +120,13 @@ easy.puz file:
 
 Command Line: clisp 8puzzle.lsp puzzlefile
 
-------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 **Program Usage Example: CLISP, passing start state as list**
 ( load '8puzzle )
 ( 8puzzle '( 1 3 4 8 6 2 7 0 5 ) )
 
-------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 **Program Usage Example: CLISP without passing in start state**
 ( load '8puzzle )
@@ -120,13 +134,15 @@ Command Line: clisp 8puzzle.lsp puzzlefile
 Please enter a puzzle:
 >> 1 3 4 8 6 2 7 0 5
 
-------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 **Solving Worst.puz**
 
-Our inadmissable heuristic for A* solves the worst.puz with the following output:
+Our inadmissable heuristic for A* solves the worst.puz with the 
+following output:
 
-A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible ) )
+A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements 
+    and add Nilsson sequence score ( Inadmissible ) )
 ---------------------------------------------------------
 Solution found in 32 moves
 29578 nodes generated (17010 distinct nodes), 10567 nodes expanded
@@ -170,13 +186,17 @@ Solution found in 32 moves
 Due to the fact that worst.puz is not solvable with our other algorithms,
 we included this here to show that one of our algorithm was able to solve it.
 
-------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 **Authors**
 J. Anthony Brackins, Scott Carda, Leif Torgersen
 
+--------------------------------------------------------------------------------
+
 **Course**
 Written Spring 2016 for CSC447/547 AI class.
+
+--------------------------------------------------------------------------------
 
 **Modifications**
 For Additional Credit, the program has been expanded beyond the 
@@ -216,9 +236,9 @@ N-puzzle format.
     "Solves an n-puzzle using several state-space search algorithms."
     ( let 
         ( 
-            ( puzzles_per_row 4 ) ; Number of puzzles printed in a row to the screen
+            ( puzzles_per_row 4 ) ; # of puzzles printed in a row to the screen
             ( goal nil )          ; Goal state for the given puzzle's length
-            ( n nil )             ; One less than the length of the puzzle (N-size)
+            ( n nil )             ; One less than length of the puzzle (N-size)
             solution              ; Anser returned by an algorithm
         )
     
@@ -248,17 +268,22 @@ N-puzzle format.
             ; If puzzle size is not a perfect square
             ( ( /=
                 ( length puzzlelist )
-                ( * ( isqrt ( length puzzlelist ) ) ( isqrt ( length puzzlelist ) ) )
+                ( * 
+                    ( isqrt ( length puzzlelist ) ) 
+                    ( isqrt ( length puzzlelist ) ) 
+                )
               )
               ( format t "Error: Puzzle size is not a perfect square.~%" )
             )
 
-            ; If the puzzle entered is not a solvable puzzle, prints message to the screen
+            ; If the puzzle entered is not a solvable puzzle, 
+            ;prints message to the screen
             ( ( not ( solvablep puzzlelist ) )
                 ( format t "The entered puzzle is not solvable.~%" )
             )
 
-            ; If the puzzle entered is a solvable puzzle, use algorithms to solve it
+            ; If the puzzle entered is a solvable puzzle, 
+            ;use algorithms to solve it
             ( t
                 ; Generate goal state for the algorithms
                 ( setf goal ( generate-goal ( - ( length puzzlelist ) 1 ) ) )
@@ -278,27 +303,51 @@ N-puzzle format.
                 ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'( lambda ( state ) ( count_wrong state goal ) )
+                    #'( lambda ( state ) 
+                        ( count_wrong state goal ) 
+                      )
                 ) )
-                ( print_stats solution "A*" "Count Incorrect Elements ( Admissible )" )
+                ( print_stats solution 
+                    "A*" 
+                    "Count Incorrect Elements ( Admissible )" 
+                )
                 ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* with Manhattan ( admissible )
                 ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'( lambda ( state ) ( count_wrong_w_rot state goal ) )
+                    #'( lambda ( state ) 
+                        ( count_wrong_w_rot state goal ) 
+                      )
                 ) )
-                ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements ( Admissible )" )
+                ( print_stats solution 
+                    "A*" 
+                    (   concatenate 
+                        'string
+                        "Count Manhattan Distance of "
+                        "Incorrect Elements ( Admissible )" 
+                    )
+                )
                 ( print_puzzle solution n puzzles_per_row )
                 
                 ; A* ( inadmissible )
                 ( setf solution ( a* puzzlelist
                     #'( lambda ( state ) ( goal? state goal ) )
                     #'successors
-                    #'( lambda ( state ) ( count_wrong_w_nilsson_score state goal ) )
+                    #'( lambda ( state ) 
+                        ( count_wrong_w_nilsson_score state goal ) 
+                      )
                 ) )
-                ( print_stats solution "A*" "Count Manhattan Distance of Incorrect Elements and add Nilsson sequence score ( Inadmissible )" )
+                ( print_stats solution 
+                    "A*" 
+                    ( concatenate 
+                        'string
+                        "Count Manhattan Distance of Incorrect Elements"
+                        " and add Nilsson sequence score ( Inadmissible )" 
+                    )
+                    
+                )
                 ( print_puzzle solution n puzzles_per_row )
             )
         )
@@ -316,7 +365,7 @@ N-puzzle format.
 ; to the interpreter, and a puzzle file is supplied. This will automatically
 ; call the 8puzzle function with the puzzle read in from the given file.
 ( defun main ()
-    "Automatically calls the 8puzzle function when the 8puzzle.lsp script is run."
+    "Automatically calls the 8puzzle function when 8puzzle.lsp script is run."
     ; File present, so read in the puzzle from file
 	( when ( = ( length *args* ) 1 )
 	    ( 8puzzle ( read-puzzle-file ( car *args* ) ) )
