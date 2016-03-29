@@ -188,9 +188,11 @@ Written Spring 2016 for CSC447/547 AI class.
 #Modifications
 For Additional Credit, the program has been expanded beyond the 
 standard 8-puzzle to handle N-puzzles, where N may be:
-(3^2) - 1 = 8 (standard 8-puzzle)
-(4^2) - 1 = 15-puzzle
-(5^2) - 1 = 24-puzzle, etc.
+
+* 3<sup>2</sup> - 1 = 8 (standard 8-puzzle)
+* 4<sup>2</sup> - 1 = 15-puzzle
+* 5<sup>2</sup> - 1 = 24-puzzle
+* etc.
 
 The program has been scaled up so that the program will be able to 
 generate the goal state of any given puzzle and determine the puzzle 
