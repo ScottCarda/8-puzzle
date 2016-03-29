@@ -177,7 +177,7 @@ Our inadmissable heuristic for A* solves the worst.puz with the following output
     7 6 5
     
 Due to the fact that worst.puz is not solvable with our other algorithms,
-we included this here to show that one of our algorithms was able to solve it.
+we included this here to show that one of our algorithm was able to solve it.
 
 #Authors
 J. Anthony Brackins, Scott Carda, Leif Torgersen
