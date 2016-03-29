@@ -136,6 +136,186 @@ Please enter a puzzle:
 
 --------------------------------------------------------------------------------
 
+
+
+--------------------------------------------------------------------------------
+
+**Authors**
+J. Anthony Brackins, Scott Carda, Leif Torgersen
+
+--------------------------------------------------------------------------------
+
+**Course**
+Written Spring 2016 for CSC447/547 AI class.
+
+--------------------------------------------------------------------------------
+
+**Modifications**
+For Additional Credit, the program has been expanded beyond the 
+standard 8-puzzle to handle N-puzzles, where N may be:
+(3^2) - 1 = 8 (standard 8-puzzle)
+(4^2) - 1 = 15-puzzle
+(5^2) - 1 = 24-puzzle, etc.
+
+The program has been scaled up so that the program will be able to 
+generate the goal state of any given puzzle and determine the puzzle 
+size based on the size of the list read in as the initial puzzle state,
+as long as the initial puzzle given to the program is in a valid 
+N-puzzle format.
+
+
+
+**Solving Tough.puz**
+Our program can solve tough.puz with all of our algorithms. However, BFS 
+and DFID both take a very long time, so we've included their printed out 
+runs to verify that they still worked. 
+BFS started at  3:41PM and ended at 4:17PM (approximately 36 minutes) and 
+DFID started at 4:17PM and ended at 4:38PM (approximately 21 minutes)
+All A* runs were almost instantaneous.
+
+Tough.puz does a great job of demonstrating how our program's inadmissible 
+heuristic, while fast, can yield a suboptimal answer. The optimal answer 
+appears to be the 18 move solution, whereas using the Count Manhattan Distance 
+of Incorrect Elements and add Nilsson sequence score heuristic yields a 
+solution in 20 moves.
+        
+BFS graph search 
+---------------------------------------------------------
+Solution found in 18 moves
+76856 nodes generated (40592 distinct nodes), 28620 nodes expanded
+
+    2 1 3       2 1 3       2 1 3       2 1 3       
+    8   4   ->  8 7 4   ->  8 7 4   ->  8 7     ->  
+    6 7 5       6   5       6 5         6 5 4       
+
+    2 1         2   1         2 1       8 2 1       
+    8 7 3   ->  8 7 3   ->  8 7 3   ->    7 3   ->  
+    6 5 4       6 5 4       6 5 4       6 5 4       
+
+    8 2 1       8   1       8 1         8 1 3       
+    7   3   ->  7 2 3   ->  7 2 3   ->  7 2     ->  
+    6 5 4       6 5 4       6 5 4       6 5 4       
+
+    8 1 3       8 1 3       8 1 3       8 1 3       
+    7 2 4   ->  7 2 4   ->  7 2 4   ->    2 4   ->  
+    6 5         6   5         6 5       7 6 5       
+
+      1 3       1   3       1 2 3       
+    8 2 4   ->  8 2 4   ->  8   4       
+    7 6 5       7 6 5       7 6 5       
+
+
+DFID graph search 
+---------------------------------------------------------
+Solution found in 18 moves
+211233 nodes generated (77401 distinct nodes), 48950 nodes expanded
+
+    2 1 3       2   3         2 3       8 2 3       
+    8   4   ->  8 1 4   ->  8 1 4   ->    1 4   ->  
+    6 7 5       6 7 5       6 7 5       6 7 5       
+
+    8 2 3       8 2 3       8 2 3       8 2 3       
+    6 1 4   ->  6 1 4   ->  6 1 4   ->  6 1     ->  
+      7 5       7   5       7 5         7 5 4       
+
+    8 2         8   2       8 1 2       8 1 2       
+    6 1 3   ->  6 1 3   ->  6   3   ->    6 3   ->  
+    7 5 4       7 5 4       7 5 4       7 5 4       
+
+      1 2       1   2       1 2         1 2 3       
+    8 6 3   ->  8 6 3   ->  8 6 3   ->  8 6     ->  
+    7 5 4       7 5 4       7 5 4       7 5 4       
+
+    1 2 3       1 2 3       1 2 3       
+    8 6 4   ->  8 6 4   ->  8   4       
+    7 5         7   5       7 6 5       
+
+
+A* graph search ( heuristic: Count Incorrect Elements ( Admissible ) )
+---------------------------------------------------------
+Solution found in 18 moves
+14763 nodes generated (8715 distinct nodes), 5287 nodes expanded
+
+    2 1 3       2   3         2 3       8 2 3       
+    8   4   ->  8 1 4   ->  8 1 4   ->    1 4   ->  
+    6 7 5       6 7 5       6 7 5       6 7 5       
+
+    8 2 3       8 2 3       8 2 3       8 2 3       
+    6 1 4   ->  6 1 4   ->  6 1 4   ->  6 1     ->  
+      7 5       7   5       7 5         7 5 4       
+
+    8 2         8   2       8 1 2       8 1 2       
+    6 1 3   ->  6 1 3   ->  6   3   ->    6 3   ->  
+    7 5 4       7 5 4       7 5 4       7 5 4       
+
+      1 2       1   2       1 2         1 2 3       
+    8 6 3   ->  8 6 3   ->  8 6 3   ->  8 6     ->  
+    7 5 4       7 5 4       7 5 4       7 5 4       
+
+    1 2 3       1 2 3       1 2 3       
+    8 6 4   ->  8 6 4   ->  8   4       
+    7 5         7   5       7 6 5       
+
+
+A* graph search ( heuristic: Count Manhattan Distance of 
+    Incorrect Elements ( Admissible ) )
+---------------------------------------------------------
+Solution found in 18 moves
+2837 nodes generated (1713 distinct nodes), 1009 nodes expanded
+
+    2 1 3       2   3         2 3       8 2 3       
+    8   4   ->  8 1 4   ->  8 1 4   ->    1 4   ->  
+    6 7 5       6 7 5       6 7 5       6 7 5       
+
+    8 2 3       8 2 3       8 2 3       8 2 3       
+    6 1 4   ->  6 1 4   ->  6 1 4   ->  6 1     ->  
+      7 5       7   5       7 5         7 5 4       
+
+    8 2         8   2       8 1 2       8 1 2       
+    6 1 3   ->  6 1 3   ->  6   3   ->    6 3   ->  
+    7 5 4       7 5 4       7 5 4       7 5 4       
+
+      1 2       1   2       1 2         1 2 3       
+    8 6 3   ->  8 6 3   ->  8 6 3   ->  8 6     ->  
+    7 5 4       7 5 4       7 5 4       7 5 4       
+
+    1 2 3       1 2 3       1 2 3       
+    8 6 4   ->  8 6 4   ->  8   4       
+    7 5         7   5       7 6 5       
+
+
+A* graph search ( heuristic: Count Manhattan Distance of Incorrect Elements 
+    and add Nilsson sequence score ( Inadmissible ) )
+---------------------------------------------------------
+Solution found in 20 moves
+2645 nodes generated (1581 distinct nodes), 932 nodes expanded
+
+    2 1 3       2 1 3       2 1 3       2 1 3       
+    8   4   ->  8 7 4   ->  8 7 4   ->    7 4   ->  
+    6 7 5       6   5         6 5       8 6 5       
+
+      1 3       1   3       1 7 3       1 7 3       
+    2 7 4   ->  2 7 4   ->  2   4   ->    2 4   ->  
+    8 6 5       8 6 5       8 6 5       8 6 5       
+
+    1 7 3       1 7 3       1 7 3       1   3       
+    8 2 4   ->  8 2 4   ->  8   4   ->  8 7 4   ->  
+      6 5       6   5       6 2 5       6 2 5       
+
+      1 3       8 1 3       8 1 3       8 1 3       
+    8 7 4   ->    7 4   ->  7   4   ->  7 2 4   ->  
+    6 2 5       6 2 5       6 2 5       6   5       
+
+    8 1 3       8 1 3         1 3       1   3       
+    7 2 4   ->    2 4   ->  8 2 4   ->  8 2 4   ->  
+      6 5       7 6 5       7 6 5       7 6 5       
+
+    1 2 3       
+    8   4       
+    7 6 5       
+
+--------------------------------------------------------------------------------
+
 **Solving Worst.puz**
 
 Our inadmissable heuristic for A* solves the worst.puz with the 
@@ -185,31 +365,6 @@ Solution found in 32 moves
     
 Due to the fact that worst.puz is not solvable with our other algorithms,
 we included this here to show that one of our algorithm was able to solve it.
-
---------------------------------------------------------------------------------
-
-**Authors**
-J. Anthony Brackins, Scott Carda, Leif Torgersen
-
---------------------------------------------------------------------------------
-
-**Course**
-Written Spring 2016 for CSC447/547 AI class.
-
---------------------------------------------------------------------------------
-
-**Modifications**
-For Additional Credit, the program has been expanded beyond the 
-standard 8-puzzle to handle N-puzzles, where N may be:
-(3^2) - 1 = 8 (standard 8-puzzle)
-(4^2) - 1 = 15-puzzle
-(5^2) - 1 = 24-puzzle, etc.
-
-The program has been scaled up so that the program will be able to 
-generate the goal state of any given puzzle and determine the puzzle 
-size based on the size of the list read in as the initial puzzle state,
-as long as the initial puzzle given to the program is in a valid 
-N-puzzle format.
 
 |#
 
