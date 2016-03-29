@@ -154,6 +154,7 @@ N-puzzle format.
 ( load 'search-funcs )
 ( load 'read-puzzle )
 ( load 'print-puzzle )
+( load 'heuristics )
 
 #|--------------------------------------------------------------------------|#
 #|                             8 Puzzle Routine                             |#
@@ -182,30 +183,6 @@ N-puzzle format.
 
         ( setf n ( - ( length puzzlelist ) 1 ) )
 
-;        ( cond 
-;            ; If n > 8 just flag as ok, since
-;            ; solvable func doesnt work for non
-;            ; 8puzzles
-;            ( ( > n 8 )
-;                ( setf ok t )
-;            )
-;
-;            ; If we're dealing with an 8 puzzle,
-;            ; see if it's solvable
-;            ( ( solvable puzzlelist )
-;                ( setf ok t )
-;            )
-;
-;            ; If it's not... then set the flag
-;            ( t
-;                ( setf ok nil )
-;            )
-;        )
-;    
-;        ; If the program has passed "solvable" or 
-;        ; if n > 8, then continue with running the program
-;        ( cond
-;            ( ( not ( null ok ) )
         ( cond
 
             ; If puzzle is blank
